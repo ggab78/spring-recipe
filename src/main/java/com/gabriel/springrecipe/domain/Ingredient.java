@@ -16,7 +16,7 @@ public class Ingredient {
     private String description;
     private BigDecimal amount;
 
-    @OneToOne (fetch = FetchType.EAGER)//EAGER is default behaviour for ..toOne mapping
+    @OneToOne (fetch = FetchType.EAGER)//EAGER is default behaviour for *ToOne mapping
     private UnitOfMeasure uom;
 
 
