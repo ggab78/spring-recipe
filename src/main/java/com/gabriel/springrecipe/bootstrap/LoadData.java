@@ -30,6 +30,7 @@ public class LoadData implements ApplicationListener<ContextRefreshedEvent> {
         guacamole.setDescription("Perfect guacamole");
         guacamole.setCookTime(1);
         guacamole.setPrepTime(30);
+        guacamole.setDifficulty(Difficulty.EASY);
 
         Ingredient avocado = new Ingredient();
         avocado.setDescription("Avocado");
