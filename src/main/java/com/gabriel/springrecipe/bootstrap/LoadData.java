@@ -1,30 +1,38 @@
 package com.gabriel.springrecipe.bootstrap;
 
+import com.fasterxml.jackson.annotation.OptBoolean;
 import com.gabriel.springrecipe.domain.*;
 import com.gabriel.springrecipe.repositories.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class LoadData implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RecipeRepository recipeRepository;
-    private final IngredientRepository ingredientRepository;
-    private final NotesRepository notesRepository;
     private final CategoryRepository categoryRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        LoadData();
+
+        recipeRepository.saveAll(getRecipes());
+        log.debug("Loading Bootstrap data");
     }
 
-    private void LoadData(){
+    private List<Recipe> getRecipes(){
+
+        List<Recipe> recipes = new ArrayList<>();
 
         Recipe guacamole = new Recipe();
         guacamole.setDescription("Perfect guacamole");
@@ -35,21 +43,26 @@ public class LoadData implements ApplicationListener<ContextRefreshedEvent> {
         Ingredient avocado = new Ingredient();
         avocado.setDescription("Avocado");
         avocado.setAmount(new BigDecimal("2.0"));
-        avocado.setUom(unitOfMeasureRepository.findByDescription("Piece").get());
-        guacamole.getIngredients().add(avocado);
+        Optional<UnitOfMeasure> uomOptional = unitOfMeasureRepository.findByDescription("Piece");
+        if(uomOptional.isPresent()){
+            avocado.setUom(unitOfMeasureRepository.findByDescription("Piece").get());
+        }else{
+            throw new RuntimeException("unit of measure must be defined");
+        }
+
+        guacamole.addIngredient(avocado); //bidirectional method which sets also recipe to ingredient
 
         Notes notes = new Notes();
         notes.setRecipeNotes("The BEST guacamole!");
-        guacamole.setNotes(notes);
+        guacamole.setNotes(notes);//set notes method modified to be bidirectional
 
         Category mexican = categoryRepository.findByDescription("Mexican").get();
+        Category american = categoryRepository.findByDescription("American").get();
         guacamole.getCategories().add(mexican);
-        recipeRepository.save(guacamole);
+        guacamole.getCategories().add(american);
 
-        avocado.setRecipe(guacamole);
-        ingredientRepository.save(avocado);
+        recipes.add(guacamole);
 
-        notes.setRecipe(guacamole);
-        notesRepository.save(notes);
+        return recipes;
     }
 }

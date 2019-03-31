@@ -1,8 +1,11 @@
 package com.gabriel.springrecipe.domain;
 
 
+import lombok.*;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 public class Notes {
 
@@ -10,33 +13,10 @@ public class Notes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob//permits to use large object of more than 256 characters which is standard
-    private String recipeNotes;
-
     @OneToOne
     private Recipe recipe;
 
-    public Long getId() {
-        return id;
-    }
+    @Lob//permits to use large object of more than 256 characters which is standard
+    private String recipeNotes;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRecipeNotes() {
-        return recipeNotes;
-    }
-
-    public void setRecipeNotes(String recipeNotes) {
-        this.recipeNotes = recipeNotes;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
 }
