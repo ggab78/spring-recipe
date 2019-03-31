@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static lombok.EqualsAndHashCode.Exclude;
+
 @Data
 @Entity
 public class Notes {
@@ -14,6 +16,7 @@ public class Notes {
     private Long id;
 
     @OneToOne
+    @Exclude // need to exclude recipes from hashCode because of bidirectional mapping
     private Recipe recipe;
 
     @Lob//permits to use large object of more than 256 characters which is standard

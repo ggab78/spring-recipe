@@ -1,13 +1,14 @@
 package com.gabriel.springrecipe.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
+@Data
 public class Category {
 
     @Id
@@ -16,6 +17,7 @@ public class Category {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
+    @Exclude // need to exclude recipes from hashCode because of bidirectional mapping
     private Set<Recipe> recipes = new HashSet<>();
 
 }
