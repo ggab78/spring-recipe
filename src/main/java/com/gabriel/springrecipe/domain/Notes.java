@@ -1,6 +1,5 @@
 package com.gabriel.springrecipe.domain;
 
-
 import lombok.*;
 
 import javax.persistence.*;
