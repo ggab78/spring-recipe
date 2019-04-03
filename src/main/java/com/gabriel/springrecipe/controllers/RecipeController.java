@@ -16,7 +16,7 @@ public class RecipeController {
     private RecipeRepository recipeRepository;
 
     @RequestMapping({"","/","/index","/index.html"})
-    public String getRecipyList(Model model){
+    public String getRecipeList(Model model){
 
         model.addAttribute("recipes",recipeRepository.findAll());
         log.debug("getting recipes/index page");
