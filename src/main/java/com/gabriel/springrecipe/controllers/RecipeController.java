@@ -1,6 +1,7 @@
 package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.repositories.RecipeRepository;
+import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @AllArgsConstructor
 public class RecipeController {
 
-    private RecipeRepository recipeRepository;
+    private RecipeService recipeService;
 
     @RequestMapping({"","/","/index","/index.html"})
     public String getRecipeList(Model model){
 
-        model.addAttribute("recipes",recipeRepository.findAll());
+        model.addAttribute("recipes",recipeService.getRecipes());
         log.debug("getting recipes/index page");
 
         return "recipes/index";
