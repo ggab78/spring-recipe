@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Recipe list</title>
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="/webjars/popper.js/1.14.7/popper.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 
 </head>
 
@@ -26,19 +36,23 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Description</th>
+                                <th>View</th>
                             </tr>
                             </thead>
                             <tr th:remove="all">
                                 <td>123</td>
                                 <td>Tasty Goodnees 1</td>
+                                <td><a href="#">View</a></td>
                             </tr>
                             <tr th:remove="all">
                                 <td>12333</td>
                                 <td>Tasty Goodnees 2</td>
+                                <td><a href="#">View</a></td>
                             </tr>
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}">334</td>
                                 <td th:text="${recipe.description}">Tasty Goodnees 3</td>
+                                <td><a href="#" th:href="@{'/recipe/show/}'+ ${recipe.id}}">View</a></td>
                             </tr>
                         </table>
                     </div>
@@ -48,10 +62,7 @@
     </div>
 
 
-    <!--To be verified if below implementation is working-->
-    <script th:href="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
-    <script th:href="@{/webjars/popper.js/1.14.7/popper.min.js}"></script>
-    <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
 
 </div>
 
