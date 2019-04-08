@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Recipe list</title>
 
-    //copied from bootstrap css cdn
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
-          th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
 
 </head>
 
@@ -32,12 +29,12 @@
                             </tr>
                             </thead>
                             <tr th:remove="all">
-                                <td th:text="${recipe.id}">123</td>
-                                <td th:text="${recipe.description}">Tasty Goodnees 1</td>
+                                <td>123</td>
+                                <td>Tasty Goodnees 1</td>
                             </tr>
                             <tr th:remove="all">
-                                <td th:text="${recipe.id}">12333</td>
-                                <td th:text="${recipe.description}">Tasty Goodnees 2</td>
+                                <td>12333</td>
+                                <td>Tasty Goodnees 2</td>
                             </tr>
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}">334</td>
@@ -51,10 +48,10 @@
     </div>
 
 
-    //To be verified if below implementation is working
-    <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/1.14.7/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+    <!--To be verified if below implementation is working-->
+    <script th:href="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+    <script th:href="@{/webjars/popper.js/1.14.7/popper.min.js}"></script>
+    <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 
 </div>
 
