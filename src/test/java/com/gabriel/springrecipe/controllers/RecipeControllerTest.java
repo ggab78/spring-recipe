@@ -9,7 +9,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
@@ -42,11 +41,14 @@ public class RecipeControllerTest {
     public void testMockMVC() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        mockMvc.perform(get("/recipes"))
+        mockMvc.perform(get("/recipes/index"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/index"));
-    }
 
+        mockMvc.perform(get("/recipe/show/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/show"));
+    }
 
     @Test
     public void getRecipeList() {
@@ -71,5 +73,23 @@ public class RecipeControllerTest {
 
         assertEquals(1, argumentCaptor.getValue().size());
 
+    }
+
+    @Test
+    public void getRecipeById() {
+
+        Long recipeId = 1L;
+        Recipe recipe = new Recipe();
+        recipe.setId(recipeId);
+
+        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
+        ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
+
+        String str = recipeController.getRecipeById(model, "1");
+
+        assertEquals("recipes/show", str);
+
+        verify(recipeService, times(1)).getRecipeById(anyLong());
+        verify(model, times(1)).addAttribute(eq("recipeById"), recipeArgumentCaptor.capture());
     }
 }

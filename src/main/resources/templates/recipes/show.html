@@ -26,7 +26,7 @@
             <div class="pannel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h1 class="panel-title" th:text="${recipe.description}">Recipe Description Here!</h1>
+                        <h1 class="panel-title" th:text="${recipeById.description}">Recipe Description Here!</h1>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -35,9 +35,7 @@
                             </div>
                             <div class="col-md-9">
                                 <ul>
-                                    <li>cat one</li>
-                                    <li>cat two</li>
-                                    <li>cat three</li>
+                                    <li th:each="cat : ${recipeById.categories}" th:text="${cat.description}"></li>
                                 </ul>
                             </div>
                         </div>
