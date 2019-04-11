@@ -10,26 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-//@RequestMapping({"/recipes"})
 @AllArgsConstructor
 public class RecipeController {
 
     private RecipeService recipeService;
 
-    @RequestMapping({"/recipes/index","/recipes/index.html"})
-    public String getRecipeList(Model model){
-
-        model.addAttribute("recipes",recipeService.getRecipes());
-        log.debug("getting recipes/index page");
-
-        return "recipes/index";
-    }
-
-    @RequestMapping({"/recipe/show/{id}",})
+    @RequestMapping("/recipe/show/{id}")
     public String getRecipeById(Model model, @PathVariable String id){
 
-        model.addAttribute("recipeById",recipeService.getRecipeById(Long.parseLong(id)));
-        log.debug("getting recipes/show page");
+        model.addAttribute("recipe",recipeService.getRecipeById(Long.parseLong(id)));
+        log.debug("getting recipe/show/{id} page");
 
         return "recipes/show";
     }

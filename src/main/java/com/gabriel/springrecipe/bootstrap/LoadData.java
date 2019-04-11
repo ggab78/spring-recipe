@@ -1,6 +1,5 @@
 package com.gabriel.springrecipe.bootstrap;
 
-import com.fasterxml.jackson.annotation.OptBoolean;
 import com.gabriel.springrecipe.domain.*;
 import com.gabriel.springrecipe.repositories.*;
 import lombok.AllArgsConstructor;
@@ -33,12 +32,23 @@ public class LoadData implements ApplicationListener<ContextRefreshedEvent> {
     private List<Recipe> getRecipes(){
 
         List<Recipe> recipes = new ArrayList<>();
-
         Recipe guacamole = new Recipe();
         guacamole.setDescription("Perfect guacamole");
-        guacamole.setCookTime(1);
+        guacamole.setCookTime(10);
         guacamole.setPrepTime(30);
         guacamole.setDifficulty(Difficulty.EASY);
+        guacamole.setUrl("https://www.simplyrecipes.com/recipes/perfect_guacamole/");
+        guacamole.setServings(4);
+        guacamole.setSource("Simply Recipes");
+        guacamole.setDirections("1. Put a teaspoon each of the chilli, onion and coriander into a pestle and mortar, " +
+                "along with a pinch of coarse salt, and grind to a paste.\n" +
+                "\n" +
+                "2. Peel the avocados and remove the stone. Cut into cubes, then mash into a chunky paste, leaving " +
+                "some pieces intact.\n" +
+                "\n" +
+                "3. Stir the chilli paste into the avocado, and then gently fold in the tomatoes and the rest of " +
+                "the onions, chilli and coriander. Add lime juice and salt to taste. Serve immediately, " +
+                "or cover the surface with cling film and refrigerate.");
 
         Ingredient avocado = new Ingredient();
         avocado.setDescription("Avocado");
@@ -60,7 +70,6 @@ public class LoadData implements ApplicationListener<ContextRefreshedEvent> {
         Category american = categoryRepository.findByDescription("American").get();
         guacamole.getCategories().add(mexican);
         guacamole.getCategories().add(american);
-
         recipes.add(guacamole);
 
         return recipes;

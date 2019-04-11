@@ -1,33 +1,26 @@
 package com.gabriel.springrecipe.controllers;
 
-import com.gabriel.springrecipe.domain.Category;
-import com.gabriel.springrecipe.domain.UnitOfMeasure;
-import com.gabriel.springrecipe.repositories.CategoryRepository;
-import com.gabriel.springrecipe.repositories.UnitOfMeasureRepository;
+import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
 
 @Controller
+@Slf4j
 @AllArgsConstructor
 public class IndexController {
 
-    private CategoryRepository categoryRepository;
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private RecipeService recipeService;
 
-    @RequestMapping({"", "/", "index", "index.html"})
-    public String getIndexPage(Model model) {
+    @RequestMapping({"/index","/index.html"})
+    public String getRecipeList(Model model){
 
-        Optional<Category> categoryOptional = categoryRepository.findByDescription("American");
-        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
+        model.addAttribute("recipes",recipeService.getRecipes());
+        log.debug("getting index page");
 
-        model.addAttribute("category", "Category Id : " + categoryOptional.get().getId());
-        model.addAttribute("unit_of_measure", "Unit_Of_Measure Id : " + unitOfMeasureOptional.get().getId());
-
-        return "index";
+        return "recipes/index";
     }
-
 }
