@@ -1,10 +1,14 @@
 package com.gabriel.springrecipe.services;
 
+import com.gabriel.springrecipe.commands.RecipeCommand;
+import com.gabriel.springrecipe.converters.RecipeCommandToRecipe;
+import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -13,10 +17,11 @@ import java.util.Set;
 @Slf4j
 @Service
 @AllArgsConstructor
-
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
 
     @Override
     public Set<Recipe> getRecipes() {
@@ -35,5 +40,14 @@ public class RecipeServiceImpl implements RecipeService {
             throw new RuntimeException("Recipe not found!");
         }
         return recipeOptional.get();
+    }
+
+    @Override
+    @Transactional
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
+        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+        log.debug("saved recipe id : "+savedRecipe.getId());
+        return recipeToRecipeCommand.convert(savedRecipe);
     }
 }

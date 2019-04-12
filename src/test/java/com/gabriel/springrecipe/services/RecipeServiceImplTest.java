@@ -1,5 +1,7 @@
 package com.gabriel.springrecipe.services;
 
+import com.gabriel.springrecipe.converters.RecipeCommandToRecipe;
+import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
 import org.junit.Before;
@@ -20,12 +22,17 @@ public class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
 
     @Before
     public void setUp() throws Exception {
 
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository,recipeToRecipeCommand, recipeCommandToRecipe);
     }
 
     @Test

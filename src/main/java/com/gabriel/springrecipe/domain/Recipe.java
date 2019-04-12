@@ -43,8 +43,8 @@ public class Recipe {
 
 
     public void setNotes(Notes notes) {
-        this.notes = notes;
         notes.setRecipe(this);
+        this.notes = notes;
     }
 
     public Recipe addIngredient(Ingredient ingredient){
