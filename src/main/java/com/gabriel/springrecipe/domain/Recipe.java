@@ -29,7 +29,13 @@ public class Recipe {
     @Lob
     private Byte[] image;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe")
+
+    /*
+    orphanRemoval changed to true because when updating Notes two
+    rows in DB were created with the same ID
+    */
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe",
+            orphanRemoval = true)
     private Notes notes;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
@@ -47,7 +53,6 @@ public class Recipe {
             notes.setRecipe(this);
             this.notes = notes;
         }
-
     }
 
     public Recipe addIngredient(Ingredient ingredient){

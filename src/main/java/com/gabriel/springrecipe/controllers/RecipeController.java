@@ -5,6 +5,7 @@ import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,27 +19,31 @@ public class RecipeController {
 
     private RecipeService recipeService;
 
-    @RequestMapping("/recipe/show/{id}")
+    @RequestMapping("/recipe/{id}/show")
     public String getRecipeById(Model model, @PathVariable String id){
 
         model.addAttribute("recipe",recipeService.getRecipeById(Long.parseLong(id)));
-        log.debug("getting recipe/show/{id} page");
-
+        log.debug("getting recipe/{id}/show page");
         return "recipes/show";
     }
 
     @RequestMapping("/recipe/new")
-    public String newRecipe(Model model){
+    public String saveRecipe(Model model){
         model.addAttribute("newrecipe", new RecipeCommand());
+        return "recipes/recipeform";
+    }
+
+    @RequestMapping("recipe/{id}/update")
+    public String updateRecipe(Model model, @PathVariable String id){
+        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(Long.parseLong(id)));
+        log.debug("getting recipe/{id}/update page");
         return "recipes/recipeform";
     }
 
     @PostMapping
     @RequestMapping(name="new_recipe")
     public String saveOrUpdate(@ModelAttribute RecipeCommand command){
-
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
-
-        return "redirect:/recipe/show/" + savedCommand.getId();
+        return "redirect:/recipe/"+ savedCommand.getId() +"/show";
     }
 }

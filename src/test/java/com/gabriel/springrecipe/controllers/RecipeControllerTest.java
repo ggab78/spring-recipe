@@ -37,7 +37,7 @@ public class RecipeControllerTest {
     public void testMockMVC() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        mockMvc.perform(get("/recipe/show/1"))
+        mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/show"));
     }
