@@ -114,7 +114,9 @@ public class RecipeToRecipeCommandTest {
         assertEquals(DIFFICULTY, recipeCommand.getDifficulty());
         assertEquals(SERVINGS, recipeCommand.getServings());
         assertEquals(SOURCE, recipeCommand.getSource());
+        assertEquals(NOTES_ID, recipeCommand.getNotes().getId());
         verify(ingredientToIngredientCommand,times(2)).convert(any());
         verify(categoryToCategoryCommand, times(2)).convert(any());
+        verify(notesToNotesCommand, times(1)).convert(any());
     }
 }

@@ -10,6 +10,7 @@ import com.gabriel.springrecipe.domain.Notes;
 import com.gabriel.springrecipe.domain.Recipe;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -111,6 +112,7 @@ public class RecipeCommandToRecipeTest {
         Notes notes = new Notes();
         notes.setId(NOTES_ID);
         when(notesCommandToNotes.convert(any())).thenReturn(notes);
+
         Recipe recipe = recipeCommandToRecipe.convert(recipeCommand);
 
         //then
@@ -120,8 +122,11 @@ public class RecipeCommandToRecipeTest {
         assertEquals(DIFFICULTY, recipe.getDifficulty());
         assertEquals(SERVINGS, recipe.getServings());
         assertEquals(SOURCE, recipe.getSource());
+        assertEquals(NOTES_ID, recipe.getNotes().getId());
         verify(ingredientCommandToIngredient,times(2)).convert(any());
         verify(categoryCommandToCategory, times(2)).convert(any());
+        verify(notesCommandToNotes, times(1)).convert(any());
+
 
     }
 }
