@@ -5,12 +5,8 @@ import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -33,15 +29,14 @@ public class RecipeController {
         return "recipes/recipeform";
     }
 
-    @RequestMapping("recipe/{id}/update")
+    @RequestMapping("/recipe/{id}/update")
     public String updateRecipe(Model model, @PathVariable String id){
         model.addAttribute("newrecipe", recipeService.getRecipeCommandById(Long.parseLong(id)));
         log.debug("getting recipe/{id}/update page");
         return "recipes/recipeform";
     }
 
-    @PostMapping
-    @RequestMapping(name="new_recipe")
+    @PostMapping("/post")
     public String saveOrUpdate(@ModelAttribute RecipeCommand command){
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipe/"+ savedCommand.getId() +"/show";
