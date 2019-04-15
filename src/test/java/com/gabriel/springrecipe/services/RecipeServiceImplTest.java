@@ -1,11 +1,13 @@
 package com.gabriel.springrecipe.services;
 
+import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.converters.RecipeCommandToRecipe;
 import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -69,5 +71,52 @@ public class RecipeServiceImplTest {
         assertEquals(recipeId, recipeService.getRecipeById(recipeId).getId());
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipeCommandById() {
+        //given
+        Long recipeId = 3L;
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(recipeId);
+
+        Recipe recipe = new Recipe();
+        recipe.setId(33L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        //when
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+
+        //then
+        assertEquals(recipeId, recipeService.getRecipeCommandById(recipeId).getId());
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeToRecipeCommand, times(1)).convert(any());
+
+    }
+
+    @Test
+    public void saveRecipeCommand() {
+        //given
+        Long recipeId = 1L;
+        Recipe recipe = new Recipe();
+        recipe.setId(recipeId);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(69L);
+
+        //when
+        when(recipeCommandToRecipe.convert(any())).thenReturn(recipe);
+        when(recipeRepository.save(any())).thenReturn(recipe);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        //then
+        RecipeCommand command = recipeService.saveRecipeCommand(recipeCommand);
+        assertEquals(((Long)69L), command.getId());
+        verify(recipeCommandToRecipe, times(1)).convert(any());
+        verify(recipeRepository, times(1)).save(any());
+        verify(recipeToRecipeCommand, times(1)).convert(any());
+
     }
 }
