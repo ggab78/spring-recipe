@@ -88,12 +88,10 @@ public class RecipeServiceImplTest {
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
-
         //then
         assertEquals(recipeId, recipeService.getRecipeCommandById(recipeId).getId());
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeToRecipeCommand, times(1)).convert(any());
-
     }
 
     @Test
@@ -117,6 +115,26 @@ public class RecipeServiceImplTest {
         verify(recipeCommandToRecipe, times(1)).convert(any());
         verify(recipeRepository, times(1)).save(any());
         verify(recipeToRecipeCommand, times(1)).convert(any());
+    }
 
+    @Test (expected = Exception.class)
+    public void deleteById() throws Exception {
+        Long deleteId = 3L;
+        Recipe recipe = new Recipe();
+        recipe.setId(deleteId);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(deleteId)).thenReturn(recipeOptional);
+        recipeService.deleteById(deleteId);
+        verify(recipeRepository, times(1)).deleteById(deleteId);
+
+        try{
+            deleteId = 4L;
+            recipeService.deleteById(deleteId);
+        }catch (Exception re) {
+            String message = "No recipe with id = "+deleteId;
+            assertEquals(message, re.getMessage());
+            throw re;
+        }
     }
 }
