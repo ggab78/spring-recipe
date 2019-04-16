@@ -33,7 +33,7 @@ public class RecipeControllerTest {
     Model model;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
