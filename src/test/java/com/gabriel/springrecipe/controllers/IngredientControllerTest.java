@@ -1,7 +1,9 @@
 package com.gabriel.springrecipe.controllers;
 
 
+import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.RecipeCommand;
+import com.gabriel.springrecipe.services.IngredientService;
 import com.gabriel.springrecipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +29,9 @@ public class IngredientControllerTest {
     RecipeService recipeService;
 
     @Mock
+    IngredientService ingredientService;
+
+    @Mock
     Model model;
 
     MockMvc mockMvc;
@@ -34,7 +39,7 @@ public class IngredientControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ingredientController = new IngredientController(recipeService);
+        ingredientController = new IngredientController(recipeService, ingredientService);
         mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
     }
 
@@ -60,6 +65,22 @@ public class IngredientControllerTest {
         ingredientController.listIngredients(model,"1");
         //then
         verify(model, times(1)).addAttribute(eq("recipe"),any());
+
+    }
+
+    @Test
+    public void showIngredient() throws Exception {
+        //given
+        IngredientCommand ingredientCommand = new IngredientCommand();
+
+        //when
+        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(),anyLong())).thenReturn(ingredientCommand);
+
+        //then
+        mockMvc.perform(get("/recipe/1/ingredients/1/show"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/show"))
+                .andExpect(model().attributeExists("ingredient"));
 
     }
 }
