@@ -24,7 +24,6 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
     private final UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure;
 
-
     @Override
     public Ingredient findIngredientByRecipeIdAndId(Long recipeId, Long ingId) {
         Recipe recipe = recipeService.getRecipeById(recipeId);
@@ -45,9 +44,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    @Transactional
     public IngredientCommand saveIngredientCommand(IngredientCommand command) {
 
         Recipe recipe = recipeService.getRecipeById(command.getRecipeId());
+
+        Ingredient saveIngredient;
 
         Optional<Ingredient> ingredientOptional = recipe
                 .getIngredients()
@@ -55,21 +57,18 @@ public class IngredientServiceImpl implements IngredientService {
                 .filter(ingredient -> ingredient.getId().equals(command.getId()))
                 .findFirst();
         if(ingredientOptional.isPresent()){
-            Ingredient foundIngredient = ingredientOptional.get();
-            foundIngredient.setDescription(command.getDescription());
-            foundIngredient.setAmount(command.getAmount());
-            foundIngredient.setUom(unitOfMeasureCommandToUnitOfMeasure.convert(command.getUom()));
+            saveIngredient = ingredientOptional.get();
+            saveIngredient.setDescription(command.getDescription());
+            saveIngredient.setAmount(command.getAmount());
+            saveIngredient.setUom(unitOfMeasureCommandToUnitOfMeasure.convert(command.getUom()));
         }else{
-            recipe.getIngredients().add(ingredientCommandToIngredient.convert(command));
+            saveIngredient = ingredientCommandToIngredient.convert(command);
+            recipe.addIngredient(saveIngredient);
         }
 
-        Recipe savedRecipe = recipeService.saveRecipe(recipe);
+        ingredientRepository.save(saveIngredient);
+        recipeService.saveRecipe(recipe);
 
-
-        return ingredientToIngredientCommand.convert(
-                savedRecipe.getIngredients()
-                .stream()
-                .filter(ingredient -> ingredient.getId().equals(command.getId()))
-                .findFirst().get());
+        return ingredientToIngredientCommand.convert(saveIngredient);
     }
 }

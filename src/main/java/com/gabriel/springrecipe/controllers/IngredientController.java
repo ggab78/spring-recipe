@@ -2,6 +2,7 @@ package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.RecipeCommand;
+import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.domain.Ingredient;
 import com.gabriel.springrecipe.services.IngredientService;
 import com.gabriel.springrecipe.services.RecipeService;
@@ -44,6 +45,21 @@ public class IngredientController {
     public String updateIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingId){
         IngredientCommand ingredientCommand
                 = ingredientService.findIngredientCommandByRecipeIdAndId(Long.parseLong(recipeId),Long.parseLong(ingId));
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand());
+        return "recipes/ingredients/ingredientform";
+    }
+    @RequestMapping("/recipe/{recipeId}/ingredients/new")
+    public String newIngredient(Model model, @PathVariable String recipeId){
+
+        //make sure that we have recipe
+        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(Long.parseLong(recipeId));
+        //todo throw exception if recipeCommand is not found
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.parseLong(recipeId));
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand());
         return "recipes/ingredients/ingredientform";

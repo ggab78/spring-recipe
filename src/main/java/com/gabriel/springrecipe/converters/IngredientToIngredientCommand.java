@@ -17,11 +17,10 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
         if(source==null){
             return null;
         }
-
         final IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId(source.getId());
-        if(source.getId()!=null){
-            ingredientCommand.setRecipeId(source.getId());
+        if(source.getRecipe().getId()!=null){
+            ingredientCommand.setRecipeId(source.getRecipe().getId());
         }
         ingredientCommand.setDescription(source.getDescription());
         ingredientCommand.setAmount(source.getAmount());
