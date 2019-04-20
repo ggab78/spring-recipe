@@ -1,6 +1,5 @@
 package com.gabriel.springrecipe.controllers;
 
-
 import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.services.IngredientService;
@@ -10,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class IngredientControllerTest {
@@ -85,6 +86,47 @@ public class IngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/ingredients/show"))
                 .andExpect(model().attributeExists("ingredient"));
+
+    }
+
+    @Test
+    public void updateIngredient() throws Exception {
+
+        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(),anyLong()))
+                .thenReturn(new IngredientCommand());
+
+        mockMvc.perform(get("/recipe/1/ingredients/1/update"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/ingredientform"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("uomList"));
+
+
+        verify(ingredientService,times(1))
+                .findIngredientCommandByRecipeIdAndId(anyLong(),anyLong());
+        verify(unitOfMeasureService, times(1)).findAllUomCommand();
+
+    }
+
+    @Test
+    public void saveOrUpdate() throws Exception {
+        //given
+        IngredientCommand command = new IngredientCommand();
+        command.setId(2L);
+        command.setRecipeId(1L);
+
+        //when
+        when(ingredientService.saveIngredientCommand(any())).thenReturn(command);
+
+        //then
+        mockMvc.perform(post("/recipe/1/postingredient")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("description", "")
+                .param("amount", "")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipe/1/ingredients/2/show"));
 
     }
 }
