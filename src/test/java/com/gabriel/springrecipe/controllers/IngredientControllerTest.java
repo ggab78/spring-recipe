@@ -2,6 +2,7 @@ package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.RecipeCommand;
+import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.services.IngredientService;
 import com.gabriel.springrecipe.services.RecipeService;
 import com.gabriel.springrecipe.services.UnitOfMeasureService;
@@ -13,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -127,6 +131,23 @@ public class IngredientControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/ingredients/2/show"));
+
+    }
+
+    @Test
+    public void newIngredient() throws Exception {
+
+        Set<UnitOfMeasureCommand> unitOfMeasureCommandSet = new HashSet<>();
+        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        unitOfMeasureCommand.setDescription("uom");
+        unitOfMeasureCommandSet.add(unitOfMeasureCommand);
+        when(unitOfMeasureService.findAllUomCommand()).thenReturn(unitOfMeasureCommandSet);
+
+        mockMvc.perform(get("/recipe/1/ingredients/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/ingredientform"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("uomList"));
 
     }
 }

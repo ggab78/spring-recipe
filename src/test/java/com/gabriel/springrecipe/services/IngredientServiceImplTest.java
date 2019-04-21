@@ -110,7 +110,7 @@ public class IngredientServiceImplTest {
     }
 
     @Test
-    public void saveIngredientCommand() {
+    public void saveExistingIngredientCommand() {
         //given
         Recipe recipe = new Recipe();
         recipe.setId(1L);
@@ -127,7 +127,6 @@ public class IngredientServiceImplTest {
         unitOfMeasure.setDescription("uom");
 
         when(recipeService.getRecipeById(any())).thenReturn(recipe);
-        when(recipeService.saveRecipe(any())).thenReturn(recipe);
         when(ingredientToIngredientCommand.convert(any())).thenReturn(ingredientCommand);
         when(unitOfMeasureCommandToUnitOfMeasure.convert(any())).thenReturn(unitOfMeasure);
 
@@ -140,5 +139,34 @@ public class IngredientServiceImplTest {
         assertEquals("uom", ingredient.getUom().getDescription());
         assertEquals((Long)1L, foundIngredientCommand.getId());
         assertEquals("command", foundIngredientCommand.getDescription());
+        verify(unitOfMeasureCommandToUnitOfMeasure, times(1)).convert(any());
+    }
+
+    @Test
+    public void saveNewIngredientCommand() {
+        //given
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        //id is not available for the new command
+        //ingredientCommand.setId(1L);
+        ingredientCommand.setDescription("command");
+        ingredientCommand.setAmount(new BigDecimal(12.0));
+
+        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        unitOfMeasureCommand.setDescription("uom");
+        ingredientCommand.setUom(unitOfMeasureCommand);
+
+        when(recipeService.getRecipeById(any())).thenReturn(new Recipe());
+        when(ingredientCommandToIngredient.convert(any())).thenReturn(new Ingredient());
+        when(ingredientToIngredientCommand.convert(any())).thenReturn(ingredientCommand);
+
+        //when
+        IngredientCommand foundIngredientCommand = ingredientServiceImpl.saveIngredientCommand(ingredientCommand);
+
+        //then
+        assertEquals("command", foundIngredientCommand.getDescription());
+        assertEquals(new BigDecimal(12.0), foundIngredientCommand.getAmount());
+        assertEquals("uom", foundIngredientCommand.getUom().getDescription());
+
+        verify(ingredientCommandToIngredient, times(1)).convert(any());
     }
 }
