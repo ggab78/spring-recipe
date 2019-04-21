@@ -4,6 +4,7 @@ import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.converters.IngredientCommandToIngredient;
 import com.gabriel.springrecipe.converters.IngredientToIngredientCommand;
+import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import com.gabriel.springrecipe.domain.Ingredient;
 import com.gabriel.springrecipe.domain.Recipe;

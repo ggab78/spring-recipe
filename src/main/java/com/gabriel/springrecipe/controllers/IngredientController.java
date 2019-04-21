@@ -3,7 +3,6 @@ package com.gabriel.springrecipe.controllers;
 import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
-import com.gabriel.springrecipe.domain.Ingredient;
 import com.gabriel.springrecipe.services.IngredientService;
 import com.gabriel.springrecipe.services.RecipeService;
 import com.gabriel.springrecipe.services.UnitOfMeasureService;
@@ -69,5 +68,15 @@ public class IngredientController {
     public String saveOrUpdate (@ModelAttribute IngredientCommand command){
         IngredientCommand ingredientCommand = ingredientService.saveIngredientCommand(command);
         return "redirect:/recipe/"+ingredientCommand.getRecipeId()+"/ingredients/"+ingredientCommand.getId()+"/show";
+    }
+
+    @RequestMapping("/recipe/{recipeId}/ingredients/{ingId}/delete")
+    public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingId){
+        try{
+            ingredientService.deleteIngredientByRecipeIdAndId(Long.parseLong(recipeId),Long.parseLong(ingId));
+        }catch (Exception e){
+            e.getMessage();
+        }
+        return "redirect:/recipe/"+recipeId+"/ingredients";
     }
 }

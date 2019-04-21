@@ -71,4 +71,20 @@ public class IngredientServiceImpl implements IngredientService {
 
         return ingredientToIngredientCommand.convert(saveIngredient);
     }
+    @Override
+    public void deleteIngredientByRecipeIdAndId(Long recipeId, Long ingId) throws Exception{
+
+        Recipe recipe = recipeService.getRecipeById(recipeId);
+        if(recipe !=null){
+            recipe.getIngredients().forEach(ingredient -> {
+                if(ingredient.getId().equals(ingId)){
+                    ingredient.setRecipe(null);
+                    ingredientRepository.delete(ingredient);
+                    recipeService.saveRecipe(recipe);
+                }
+            });
+        }else{
+            throw new Exception("Recipe with id = "+recipeId+" not found");
+        }
+    }
 }
