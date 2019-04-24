@@ -76,13 +76,17 @@ public class IngredientServiceImpl implements IngredientService {
 
         Recipe recipe = recipeService.getRecipeById(recipeId);
         if(recipe !=null){
-            recipe.getIngredients().forEach(ingredient -> {
-                if(ingredient.getId().equals(ingId)){
-                    ingredient.setRecipe(null);
-                    ingredientRepository.delete(ingredient);
-                    recipeService.saveRecipe(recipe);
-                }
-            });
+            if(recipe.getIngredients().size()>0){
+                recipe.getIngredients().forEach(ingredient -> {
+                    if(ingredient.getId().equals(ingId)){
+                        ingredient.setRecipe(null);
+                        ingredientRepository.delete(ingredient);
+                        recipeService.saveRecipe(recipe);
+                    }
+                });
+            }else{
+                throw new Exception("Recipe doesn't contain ingredients");
+            }
         }else{
             throw new Exception("Recipe with id = "+recipeId+" not found");
         }

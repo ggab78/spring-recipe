@@ -53,7 +53,7 @@ public class IngredientControllerTest {
     }
 
     @Test
-    public void listIngredients() throws Exception{
+    public void listIngredients() throws Exception {
         //given
         Long recipeId = 1L;
         RecipeCommand recipeCommand = new RecipeCommand();
@@ -71,9 +71,9 @@ public class IngredientControllerTest {
 
 
         //when
-        ingredientController.listIngredients(model,"1");
+        ingredientController.listIngredients(model, "1");
         //then
-        verify(model, times(1)).addAttribute(eq("recipe"),any());
+        verify(model, times(1)).addAttribute(eq("recipe"), any());
 
     }
 
@@ -83,7 +83,7 @@ public class IngredientControllerTest {
         IngredientCommand ingredientCommand = new IngredientCommand();
 
         //when
-        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(),anyLong())).thenReturn(ingredientCommand);
+        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(), anyLong())).thenReturn(ingredientCommand);
 
         //then
         mockMvc.perform(get("/recipe/1/ingredients/1/show"))
@@ -96,7 +96,7 @@ public class IngredientControllerTest {
     @Test
     public void updateIngredient() throws Exception {
 
-        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(),anyLong()))
+        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyLong(), anyLong()))
                 .thenReturn(new IngredientCommand());
 
         mockMvc.perform(get("/recipe/1/ingredients/1/update"))
@@ -106,8 +106,8 @@ public class IngredientControllerTest {
                 .andExpect(model().attributeExists("uomList"));
 
 
-        verify(ingredientService,times(1))
-                .findIngredientCommandByRecipeIdAndId(anyLong(),anyLong());
+        verify(ingredientService, times(1))
+                .findIngredientCommandByRecipeIdAndId(anyLong(), anyLong());
         verify(unitOfMeasureService, times(1)).findAllUomCommand();
 
     }
@@ -128,7 +128,7 @@ public class IngredientControllerTest {
                 .param("id", "")
                 .param("description", "")
                 .param("amount", "")
-                )
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/ingredients/2/show"));
 
@@ -149,5 +149,17 @@ public class IngredientControllerTest {
                 .andExpect(model().attributeExists("ingredient"))
                 .andExpect(model().attributeExists("uomList"));
 
+    }
+
+    @Test
+    public void deleteIngredient() throws Exception {
+
+        ingredientController.deleteIngredient("1","1");
+
+        verify(ingredientService, times(1)).deleteIngredientByRecipeIdAndId(anyLong(), anyLong());
+
+        mockMvc.perform(get("/recipe/1/ingredients/1/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipe/1/ingredients"));
     }
 }

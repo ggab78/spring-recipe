@@ -170,4 +170,45 @@ public class IngredientServiceImplTest {
 
         verify(ingredientCommandToIngredient, times(1)).convert(any());
     }
+
+    @Test (expected = Exception.class)
+    public void deleteIngredientByRecipeIdAndId() throws Exception {
+
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(1L);
+        recipe.addIngredient(ingredient);
+
+        //when
+        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
+        ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+
+        //then
+        verify(ingredientRepository, times(1)).delete(any());
+        verify(recipeService, times(1)).saveRecipe(any());
+
+
+        //when
+        when(recipeService.getRecipeById(anyLong())).thenReturn(null);
+        //then
+        try{
+            ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+        }catch (Exception e){
+            assertEquals("Recipe with id = 1 not found",e.getMessage());
+            throw e;
+        }
+
+        //when
+        when(recipeService.getRecipeById(anyLong())).thenReturn(new Recipe());
+        //then
+        try{
+            ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+        }catch (Exception e){
+            assertEquals("Recipe doesn't contain ingredients",e.getMessage());
+            throw e;
+        }
+
+
+    }
 }
