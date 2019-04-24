@@ -66,10 +66,16 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label>Difficulty:</label>
-                                    <select class="form-control">
+                                    <select class="form-control" th:remove="all">
                                         <option>Easy</option>
                                         <option>Medium</option>
                                         <option>Hard</option>
+                                    </select>
+                                    <select class="form-control" th:field="*{difficulty}">
+                                        <option th:each="difficultyVal:${T(com.gabriel.springrecipe.domain.Difficulty).values()}"
+                                                th:value="${difficultyVal}"
+                                                th:text="${difficultyVal}"
+                                        >val</option>
                                     </select>
                                 </div>
                             </div>
