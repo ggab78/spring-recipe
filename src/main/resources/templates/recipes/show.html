@@ -56,8 +56,9 @@
                             </div>
                             <div class="col-md-6">
                                 <img src="../../static/images/guaca.jpeg"
-                                th:src="@{/images/guaca.jpeg}"
-                                width="400" heigh="400">
+                                     th:if="${recipe.image != null}"
+                                     th:src="@{'/recipe/'+${recipe.id}+'/recipeimage'}"
+                                     width="400" heigh="400">
                             </div>
                         </div>
 
