@@ -25,22 +25,39 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="pannel-group">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <p><a href="#" th:href="@{/index.html}">List of Recipes</a></p>
-                        <h1 class="panel-title" th:text="${recipe.description}">Recipe Description Here!</h1>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><a href="#" th:href="@{/index.html}">List of Recipes</a></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-heading">
+                                <h1 class="panel-title" th:text="${recipe.description}">Recipe Description Here!</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                                <a class="btn btn-default" href="#"
+                                   th:href="@{'/recipe/' + ${recipe.id} + '/image'}" role="button">Change Image</a>
+                        </div>
                     </div>
                     <div class="panel-body">
 
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <h5>Categories:</h5>
-                            </div>
-                            <div class="col-md-9">
+                            <!--</div>-->
+                            <!--<div class="col-md-3">-->
                                 <ul>
                                     <li th:remove = "all">cat 1</li>
                                     <li th:remove = "all">cat 2</li>
                                     <li th:each="cat : ${recipe.categories}" th:text="${cat.description}">cat 3</li>
                                 </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="../../static/images/guaca.jpeg"
+                                th:src="@{/images/guaca.jpeg}"
+                                width="400" heigh="400">
                             </div>
                         </div>
 
