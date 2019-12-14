@@ -25,6 +25,8 @@ public class RecipeController {
         try {
             parsedID = Long.parseLong(id);
         }catch(NumberFormatException e){
+            //No need try_catch block since Long.parseLong(String s) throws NumberFormatException
+            //using this gives opportunity to edit error msg
             throw new NumberFormatException("For input string: "+"\""+id+"\"");
         }
 
@@ -58,21 +60,4 @@ public class RecipeController {
         return "redirect:/";
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFoundException(NotFoundException exception){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("exception", exception);
-        modelAndView.setViewName("404error");
-        return  modelAndView;
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
-    public ModelAndView handleNumberFormatException(NumberFormatException exception){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("exception", exception);
-        modelAndView.setViewName("400error");
-        return  modelAndView;
-    }
 }
