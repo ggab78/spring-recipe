@@ -1,12 +1,15 @@
 package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.RecipeCommand;
+import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller
@@ -46,5 +49,13 @@ public class RecipeController {
     public String deleteById(@PathVariable String id) throws Exception{
         recipeService.deleteById(Long.parseLong(id));
         return "redirect:/";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("404error");
+        return  modelAndView;
     }
 }

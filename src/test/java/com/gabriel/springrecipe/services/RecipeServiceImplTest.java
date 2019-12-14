@@ -4,6 +4,7 @@ import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.converters.RecipeCommandToRecipe;
 import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
+import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,6 +73,19 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
+
+    @Test(expected = NotFoundException.class)
+    public void getRecipeByIdNotFound() {
+
+        Optional<Recipe> recipeOptional = Optional.empty();
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        recipeService.getRecipeById(1L);
+
+    }
+
+
 
     @Test
     public void getRecipeCommandById() {

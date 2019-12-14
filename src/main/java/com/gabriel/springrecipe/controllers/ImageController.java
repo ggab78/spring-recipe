@@ -37,7 +37,6 @@ public class ImageController {
     public String handleImage(@PathVariable String recipeId, @RequestParam("imagefile")MultipartFile file){
 
         imageService.saveImageFile(Long.parseLong(recipeId), file);
-
         return "redirect:/recipe/"+recipeId+"/show";
     }
 

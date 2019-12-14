@@ -3,6 +3,7 @@ package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
+import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +61,16 @@ public class RecipeControllerTest {
 
         verify(recipeService, times(2)).getRecipeById(anyLong());
         verify(model, times(1)).addAttribute(eq("recipe"), recipeArgumentCaptor.capture());
+    }
+
+    @Test
+    public void getRecipeByIdNotFound() throws Exception {
+
+        when(recipeService.getRecipeById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
     }
 
     @Test
