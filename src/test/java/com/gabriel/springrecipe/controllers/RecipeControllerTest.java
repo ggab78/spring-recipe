@@ -70,6 +70,7 @@ public class RecipeControllerTest {
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isNotFound())
+                .andExpect(model().attributeExists("exception"))
                 .andExpect(view().name("404error"));
     }
 
