@@ -75,6 +75,19 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void getRecipeByIdNumberFormat() throws Exception {
+
+        when(recipeService.getRecipeById(anyLong())).thenThrow(NumberFormatException.class);
+
+        mockMvc.perform(get("/recipe/abc/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("400error"));
+    }
+
+
+
+    @Test
     public void saveRecipe() throws Exception {
 
         mockMvc.perform(get("/recipe/new"))

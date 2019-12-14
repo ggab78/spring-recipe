@@ -21,7 +21,14 @@ public class RecipeController {
     @RequestMapping("/recipe/{id}/show")
     public String getRecipeById(Model model, @PathVariable String id){
 
-        model.addAttribute("recipe",recipeService.getRecipeById(Long.parseLong(id)));
+        Long parsedID;
+        try {
+            parsedID = Long.parseLong(id);
+        }catch(NumberFormatException e){
+            throw new NumberFormatException("For input string: "+"\""+id+"\"");
+        }
+
+        model.addAttribute("recipe",recipeService.getRecipeById(parsedID));
         log.debug("getting recipe/{id}/show page");
         return "recipes/show";
     }
@@ -53,10 +60,19 @@ public class RecipeController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFound(NotFoundException exception){
+    public ModelAndView handleNotFoundException(NotFoundException exception){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("exception", exception);
         modelAndView.setViewName("404error");
+        return  modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public ModelAndView handleNumberFormatException(NumberFormatException exception){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("exception", exception);
+        modelAndView.setViewName("400error");
         return  modelAndView;
     }
 }
