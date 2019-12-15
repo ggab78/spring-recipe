@@ -150,7 +150,7 @@ public class RecipeControllerTest {
                 .param("description", "very good")
         )
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("recipe"))
+                .andExpect(model().attributeExists("newrecipe"))
                 .andExpect(view().name("recipes/recipeform"));
     }
 
