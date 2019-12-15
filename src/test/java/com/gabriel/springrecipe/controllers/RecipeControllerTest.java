@@ -134,11 +134,26 @@ public class RecipeControllerTest {
         mockMvc.perform(post("/post")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
-                .param("description", "")
+                .param("description", "very good")
+                .param("directions", "cook it")
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/2/show"));
     }
+
+    @Test
+    public void saveOrUpdateValidationFail() throws Exception{
+
+        mockMvc.perform(post("/post")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("description", "very good")
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(view().name("recipes/recipeform"));
+    }
+
 
     @Test
     public void deleteById() throws Exception {
