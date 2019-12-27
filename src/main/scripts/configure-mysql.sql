@@ -1,5 +1,7 @@
 ## Use to run mysql db docker image, optional if you're not using a local mysqldb
 # docker run --name mysqldb -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d mysql
+# or below to use local datafile and keep data after container is stopped
+# docker run --name mysqldb -p 3306:3306 -v /home/gabriel/dockerdata/mysql:/var/lib/mysql  -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d mysql
 
 # connect to mysql and run as root user
 #Create Databases
