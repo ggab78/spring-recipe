@@ -1,9 +1,7 @@
 package com.gabriel.springrecipe.domain;
 
-import lombok.Data;
+import lombok.*;
 import lombok.EqualsAndHashCode.Exclude;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,7 +9,16 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Ingredient {
+
+
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom){
+        this.uom=uom;
+        this.description=description;
+        this.amount=amount;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
