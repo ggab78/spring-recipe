@@ -14,7 +14,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -90,7 +92,7 @@ public class RecipeCommandToRecipeTest {
         notesCommand.setId(NOTES_ID);
         recipeCommand.setNotes(notesCommand);
 
-        Set<CategoryCommand> categorySet = new HashSet<>();
+        List<CategoryCommand> categorySet = new ArrayList<>();
         CategoryCommand cat = new CategoryCommand();
         cat.setId(CAT_ID_1);
         categorySet.add(cat);
@@ -99,14 +101,14 @@ public class RecipeCommandToRecipeTest {
         categorySet.add(cat);
         recipeCommand.setCategories(categorySet);
 
-        Set<IngredientCommand> ingredientSet = new HashSet<>();
+        List<IngredientCommand> ingredientList = new ArrayList<IngredientCommand>();
         IngredientCommand ing = new IngredientCommand();
         ing.setId(INGRED_ID_1);
-        ingredientSet.add(ing);
+        ingredientList.add(ing);
         ing = new IngredientCommand();
         ing.setId(INGRED_ID_2);
-        ingredientSet.add(ing);
-        recipeCommand.setIngredients(ingredientSet);
+        ingredientList.add(ing);
+        recipeCommand.setIngredients(ingredientList);
 
         //when
         Notes notes = new Notes();

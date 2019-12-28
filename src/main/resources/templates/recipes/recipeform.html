@@ -98,8 +98,8 @@
                                     </select>
                                     <select class="form-control" th:field="*{difficulty}">
                                         <option th:each="difficultyVal:${T(com.gabriel.springrecipe.domain.Difficulty).values()}"
-                                                th:value="${difficultyVal}"
-                                                th:text="${difficultyVal}"
+                                                th:value="${difficultyVal.name()}"
+                                                th:text="${difficultyVal.name()}"
                                         >val</option>
                                     </select>
                                 </div>
@@ -155,6 +155,17 @@
                                         ' - ' + ingredient.getDescription())}">1 Teaspoon of Sugar
                                         </li>
                                     </ul>
+                                    <div th:each="ingredientEach, idx : ${newrecipe.ingredients}" >
+                                        <input  type="hidden" th:field="*{ingredients[__${idx.index}__].id}" />
+                                        <input  type="hidden" th:field="*{ingredients[__${idx.index}__].description}" />
+                                        <input  type="hidden" th:field="*{ingredients[__${idx.index}__].amount}" />
+                                        <input  type="hidden" th:field="*{ingredients[__${idx.index}__].uom.id}" />
+                                    </div>
+                                    <div th:each="catEach, idx : ${newrecipe.categories}" >
+                                        <input  type="hidden" th:field="*{categories[__${idx.index}__].id}" />
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
