@@ -9,11 +9,13 @@ import com.gabriel.springrecipe.domain.Ingredient;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.repositories.IngredientRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
@@ -35,6 +37,7 @@ public class IngredientServiceImpl implements IngredientService {
         for(Ingredient ingredient:recipe.getIngredients()){
             if(ingredient.getId().equals(ingId)){
                 return ingredient;
+
             }
         }
         throw new RuntimeException("Ingredient Id not found");
@@ -43,7 +46,9 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     @Transactional
     public IngredientCommand findIngredientCommandByRecipeIdAndId(String recipeId, String ingId) {
-        return ingredientToIngredientCommand.convert(findIngredientByRecipeIdAndId(recipeId, ingId));
+        IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(findIngredientByRecipeIdAndId(recipeId, ingId));
+        ingredientCommand.setRecipeId(recipeId);
+        return ingredientCommand;
     }
 
     @Override
@@ -72,8 +77,14 @@ public class IngredientServiceImpl implements IngredientService {
         ingredientRepository.save(saveIngredient);
         recipeService.saveRecipe(recipe);
 
-        return ingredientToIngredientCommand.convert(saveIngredient);
+        IngredientCommand savedCommand = ingredientToIngredientCommand.convert(saveIngredient);
+        savedCommand.setRecipeId(recipe.getId());
+
+        log.debug("Recipe Id in Command "+savedCommand.getRecipeId());
+
+        return savedCommand;
     }
+
     @Override
     public void deleteIngredientByRecipeIdAndId(String recipeId, String ingId) throws Exception{
 

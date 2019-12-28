@@ -15,7 +15,7 @@ public class Ingredient {
 
 
 
-    private String id= UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString();
 
 //    need to exclude recipes from hashCode because of bidirectional mapping
 //    @Exclude
@@ -25,7 +25,6 @@ public class Ingredient {
     private UnitOfMeasure uom;
     private String description;
     private BigDecimal amount;
-
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom){
         this.uom=uom;
