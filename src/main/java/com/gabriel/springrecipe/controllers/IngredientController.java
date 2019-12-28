@@ -26,7 +26,7 @@ public class IngredientController {
 
     @RequestMapping("/recipe/{id}/ingredients")
     public String listIngredients(Model model, @PathVariable String id) {
-        model.addAttribute("recipe", recipeService.getRecipeCommandById(Long.parseLong(id)));
+        model.addAttribute("recipe", recipeService.getRecipeCommandById(id));
         return "recipes/ingredients/list";
     }
 
@@ -34,7 +34,7 @@ public class IngredientController {
     public String showIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingId){
 
         IngredientCommand ingredientCommand
-                = ingredientService.findIngredientCommandByRecipeIdAndId(Long.parseLong(recipeId),Long.parseLong(ingId));
+                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId);
         model.addAttribute("ingredient", ingredientCommand);
 
         return "recipes/ingredients/show";
@@ -43,7 +43,7 @@ public class IngredientController {
     @RequestMapping("/recipe/{recipeId}/ingredients/{ingId}/update")
     public String updateIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingId){
         IngredientCommand ingredientCommand
-                = ingredientService.findIngredientCommandByRecipeIdAndId(Long.parseLong(recipeId),Long.parseLong(ingId));
+                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId);
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand());
         return "recipes/ingredients/ingredientform";
@@ -52,11 +52,11 @@ public class IngredientController {
     public String newIngredient(Model model, @PathVariable String recipeId){
 
         //make sure that we have recipe
-        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(Long.parseLong(recipeId));
+        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId);
         //todo throw exception if recipeCommand is not found
 
         IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setRecipeId(Long.parseLong(recipeId));
+        ingredientCommand.setRecipeId(recipeId);
         ingredientCommand.setUom(new UnitOfMeasureCommand());
 
         model.addAttribute("ingredient", ingredientCommand);
@@ -73,7 +73,7 @@ public class IngredientController {
     @RequestMapping("/recipe/{recipeId}/ingredients/{ingId}/delete")
     public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingId){
         try{
-            ingredientService.deleteIngredientByRecipeIdAndId(Long.parseLong(recipeId),Long.parseLong(ingId));
+            ingredientService.deleteIngredientByRecipeIdAndId(recipeId,ingId);
         }catch (Exception e){
             e.getMessage();
         }

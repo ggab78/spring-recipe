@@ -24,16 +24,16 @@ public class RecipeController {
     @RequestMapping("/recipe/{id}/show")
     public String getRecipeById(Model model, @PathVariable String id){
 
-        Long parsedID;
-        try {
-            parsedID = Long.parseLong(id);
-        }catch(NumberFormatException e){
-            //No need try_catch block since Long.parseLong(String s) throws NumberFormatException
-            //using this gives opportunity to edit error msg
-            throw new NumberFormatException("For input string: "+"\""+id+"\"");
-        }
+//        Long parsedID;
+//        try {
+//            parsedID = Long.parseLong(id);
+//        }catch(NumberFormatException e){
+//            //No need try_catch block since Long.parseLong(String s) throws NumberFormatException
+//            //using this gives opportunity to edit error msg
+//            throw new NumberFormatException("For input string: "+"\""+id+"\"");
+//        }
 
-        model.addAttribute("recipe",recipeService.getRecipeById(parsedID));
+        model.addAttribute("recipe",recipeService.getRecipeById(id));
         log.debug("getting recipe/{id}/show page");
         return "recipes/show";
     }
@@ -46,7 +46,7 @@ public class RecipeController {
 
     @RequestMapping("/recipe/{id}/update")
     public String updateRecipe(Model model, @PathVariable String id){
-        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(Long.parseLong(id)));
+        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(id));
         log.debug("getting recipe/{id}/update page");
         return "recipes/recipeform";
     }
@@ -67,7 +67,7 @@ public class RecipeController {
 
     @RequestMapping("/recipe/{id}/delete")
     public String deleteById(@PathVariable String id) throws Exception{
-        recipeService.deleteById(Long.parseLong(id));
+        recipeService.deleteById(id);
         return "redirect:/";
     }
 

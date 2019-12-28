@@ -7,9 +7,9 @@ import com.gabriel.springrecipe.domain.Recipe;
 
 public interface IngredientService {
 
-    Ingredient findIngredientByRecipeIdAndId(Long recipeId, Long ingId);
-    IngredientCommand findIngredientCommandByRecipeIdAndId(Long recipeId, Long ingId);
+    Ingredient findIngredientByRecipeIdAndId(String recipeId, String ingId);
+    IngredientCommand findIngredientCommandByRecipeIdAndId(String recipeId, String ingId);
     IngredientCommand saveIngredientCommand(IngredientCommand command);
-    void deleteIngredientByRecipeIdAndId(Long recipeId, Long ingId) throws Exception;
+    void deleteIngredientByRecipeIdAndId(String recipeId, String ingId) throws Exception;
 }
 

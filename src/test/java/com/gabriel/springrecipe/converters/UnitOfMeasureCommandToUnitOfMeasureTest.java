@@ -11,7 +11,7 @@ public class UnitOfMeasureCommandToUnitOfMeasureTest {
 
     UnitOfMeasureCommandToUnitOfMeasure converter;
 
-    private static final Long ID = 1L;
+    private static final String ID = "1";
     private static final String DESCRIPTION = "description";
 
     @Before

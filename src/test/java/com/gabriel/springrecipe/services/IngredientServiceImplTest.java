@@ -21,8 +21,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -56,27 +55,27 @@ public class IngredientServiceImplTest {
     public void findIngredientByRecipeIdAndId() throws RuntimeException {
         //given
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(2L);
+        ingredient.setId("2");
         recipe.addIngredient(ingredient);
 
         Optional<Ingredient> ingredientOptional = Optional.of(ingredient);
 
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
-        when(ingredientRepository.findByRecipeAndId(any(),anyLong())).thenReturn(ingredientOptional);
+        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
+        //when(ingredientRepository.findByRecipeAndId(any(),anyString())).thenReturn(ingredientOptional);
 
         //when
-        Ingredient returnedIngredient = ingredientServiceImpl.findIngredientByRecipeIdAndId(1L,2L);
+        Ingredient returnedIngredient = ingredientServiceImpl.findIngredientByRecipeIdAndId("1","2");
 
         //then
         assertNotNull(returnedIngredient);
         assertEquals((Long)2L, returnedIngredient.getId());
 
         //when
-        when(recipeService.getRecipeById(anyLong())).thenReturn(new Recipe());
+        when(recipeService.getRecipeById(anyString())).thenReturn(new Recipe());
         try{
-            ingredientServiceImpl.findIngredientByRecipeIdAndId(1L,2L);
+            ingredientServiceImpl.findIngredientByRecipeIdAndId("1","2");
         }catch(RuntimeException re){
             assertEquals("Recipe doesn't contain ingredients",re.getMessage());
             throw re;
@@ -87,24 +86,24 @@ public class IngredientServiceImplTest {
     public void findIngredientCommandByRecipeIdAndId() {
         //given
         IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setId(2L);
+        ingredientCommand.setId("2");
 
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(1L);
+        ingredient.setId("1");
         recipe.addIngredient(ingredient);
 
         Optional<Ingredient> ingredientOptional = Optional.of(ingredient);
 
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
-        when(ingredientRepository.findByRecipeAndId(any(),anyLong())).thenReturn(ingredientOptional);
+        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
+       // when(ingredientRepository.findByRecipeAndId(any(),anyString())).thenReturn(ingredientOptional);
 
 
         //when
         when(ingredientToIngredientCommand.convert(any())).thenReturn(ingredientCommand);
 
-        ingredientServiceImpl.findIngredientCommandByRecipeIdAndId(1L,1L);
+        ingredientServiceImpl.findIngredientCommandByRecipeIdAndId("1","1");
 
         verify(ingredientToIngredientCommand, times(1)).convert(any());
 
@@ -114,13 +113,13 @@ public class IngredientServiceImplTest {
     public void saveExistingIngredientCommand() {
         //given
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(1L);
+        ingredient.setId("1");
         recipe.addIngredient(ingredient);
 
         IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setId(1L);
+        ingredientCommand.setId("1");
         ingredientCommand.setDescription("command");
         ingredientCommand.setAmount(new BigDecimal(12.0));
 
@@ -175,14 +174,14 @@ public class IngredientServiceImplTest {
     public void deleteIngredientByRecipeIdAndId() throws Exception {
 
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(1L);
+        ingredient.setId("1");
         recipe.addIngredient(ingredient);
 
         //when
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
-        ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
+        ingredientServiceImpl.deleteIngredientByRecipeIdAndId("1", "1");
 
         //then
         verify(ingredientRepository, times(1)).delete(any());
@@ -190,20 +189,20 @@ public class IngredientServiceImplTest {
 
 
         //when
-        when(recipeService.getRecipeById(anyLong())).thenReturn(null);
+        when(recipeService.getRecipeById(anyString())).thenReturn(null);
         //then
         try{
-            ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+            ingredientServiceImpl.deleteIngredientByRecipeIdAndId("1", "1");
         }catch (Exception e){
             assertEquals("Recipe with id = 1 not found",e.getMessage());
             throw e;
         }
 
         //when
-        when(recipeService.getRecipeById(anyLong())).thenReturn(new Recipe());
+        when(recipeService.getRecipeById(anyString())).thenReturn(new Recipe());
         //then
         try{
-            ingredientServiceImpl.deleteIngredientByRecipeIdAndId(1L, 1L);
+            ingredientServiceImpl.deleteIngredientByRecipeIdAndId("1", "1");
         }catch (Exception e){
             assertEquals("Recipe doesn't contain ingredients",e.getMessage());
             throw e;

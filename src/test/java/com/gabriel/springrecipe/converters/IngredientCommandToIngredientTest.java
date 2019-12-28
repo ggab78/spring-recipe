@@ -20,9 +20,9 @@ public class IngredientCommandToIngredientTest {
     IngredientCommandToIngredient ingredientCommandToIngredient;
 
     public static final String DESCRIPTION = "description";
-    public static final Long ID = 1L;
+    public static final String ID = "1";
     public static final BigDecimal AMOUNT = new BigDecimal(2.0);
-    public static final Long UOM_ID = 143L;
+    public static final String UOM_ID = "143";
 
     @Mock
     UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure;

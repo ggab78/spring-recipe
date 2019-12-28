@@ -12,7 +12,7 @@ public class NotesToNotesCommandTest {
     NotesToNotesCommand notesToNotesCommand;
 
     public static final String NOTES = "notes";
-    public static final Long ID = 1L;
+    public static final String ID = "1";
 
     @Before
     public void setUp() throws Exception {

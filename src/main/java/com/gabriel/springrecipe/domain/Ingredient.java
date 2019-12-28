@@ -2,15 +2,28 @@ package com.gabriel.springrecipe.domain;
 
 import lombok.*;
 import lombok.EqualsAndHashCode.Exclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Ingredient {
+
+
+    @Id
+    private String id;
+
+//    need to exclude recipes from hashCode because of bidirectional mapping
+//    @Exclude
+//    private Recipe recipe;
+
+    @DBRef
+    private UnitOfMeasure uom;
+    private String description;
+    private BigDecimal amount;
 
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom){
@@ -18,20 +31,5 @@ public class Ingredient {
         this.description=description;
         this.amount=amount;
     }
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @Exclude // need to exclude recipes from hashCode because of bidirectional mapping
-    private Recipe recipe;
-
-    @OneToOne (fetch = FetchType.EAGER)//EAGER is default behaviour for *ToOne mapping
-    private UnitOfMeasure uom;
-
-    private String description;
-    private BigDecimal amount;
 
 }

@@ -1,62 +1,43 @@
 package com.gabriel.springrecipe.domain;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Data
+@Getter
+@Setter
+@Document
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String description;
     private Integer prepTime;
     private Integer cookTime;
     private Integer servings;
     private String source;
     private String url;
-
-    @Lob
     private String directions;
-
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
-
-    @Lob
     private Byte[] image;
-
-
-    /*
-    orphanRemoval changed to true because when updating Notes two
-    rows in DB were created with the same ID
-    */
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe",
-            orphanRemoval = true)
     private Notes notes;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "recipe_category",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @DBRef
     private Set<Category> categories = new HashSet<>();
-
 
     public void setNotes(Notes notes) {
         if(notes!=null){
-            notes.setRecipe(this);
             this.notes = notes;
         }
     }
 
     public Recipe addIngredient(Ingredient ingredient){
-        ingredient.setRecipe(this);
         this.ingredients.add(ingredient);
         return this;
     }

@@ -45,10 +45,10 @@ public class UnitOfMeasureServiceImplTest {
         //given
         Set<UnitOfMeasure> unitOfMeasureSet = new HashSet<>();
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId(1L);
+        unitOfMeasure.setId("1");
         unitOfMeasureSet.add(unitOfMeasure);
         unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId(2L);
+        unitOfMeasure.setId("2");
         unitOfMeasureSet.add(unitOfMeasure);
         Iterable<UnitOfMeasure> unitOfMeasureIterable = unitOfMeasureSet.stream().collect(Collectors.toSet());
 
@@ -66,10 +66,10 @@ public class UnitOfMeasureServiceImplTest {
         UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
         Set<UnitOfMeasure> unitOfMeasureSet = new HashSet<>();
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId(1L);
+        unitOfMeasure.setId("1");
         unitOfMeasureSet.add(unitOfMeasure);
         unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId(2L);
+        unitOfMeasure.setId("2");
         unitOfMeasureSet.add(unitOfMeasure);
         Iterable<UnitOfMeasure> unitOfMeasureIterable = unitOfMeasureSet.stream().collect(Collectors.toSet());
 

@@ -62,15 +62,15 @@ public class RecipeServiceImplTest {
     @Test
     public void getRecipeById() {
 
-        Long recipeId = 1L;
+        String recipeId = "1";
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
 
         Optional<Recipe> recipeOptional = Optional.of(recipe);
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
         assertEquals(recipeId, recipeService.getRecipeById(recipeId).getId());
-        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, never()).findAll();
     }
 
@@ -79,9 +79,9 @@ public class RecipeServiceImplTest {
 
         Optional<Recipe> recipeOptional = Optional.empty();
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
-        recipeService.getRecipeById(1L);
+        recipeService.getRecipeById("1");
 
     }
 
@@ -90,33 +90,33 @@ public class RecipeServiceImplTest {
     @Test
     public void getRecipeCommandById() {
         //given
-        Long recipeId = 3L;
+        String recipeId = "3";
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(recipeId);
 
         Recipe recipe = new Recipe();
-        recipe.setId(33L);
+        recipe.setId("33");
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         //when
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
         //then
         assertEquals(recipeId, recipeService.getRecipeCommandById(recipeId).getId());
-        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeToRecipeCommand, times(1)).convert(any());
     }
 
     @Test
     public void saveRecipeCommand() {
         //given
-        Long recipeId = 1L;
+        String recipeId = "1";
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
 
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(69L);
+        recipeCommand.setId("69");
 
         //when
         when(recipeCommandToRecipe.convert(any())).thenReturn(recipe);
@@ -133,7 +133,7 @@ public class RecipeServiceImplTest {
 
     @Test (expected = Exception.class)
     public void deleteById() throws Exception {
-        Long deleteId = 3L;
+        String deleteId = "3";
         Recipe recipe = new Recipe();
         recipe.setId(deleteId);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -143,7 +143,7 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).deleteById(deleteId);
 
         try{
-            deleteId = 4L;
+            deleteId = "4";
             recipeService.deleteById(deleteId);
         }catch (Exception re) {
             String message = "No recipe with id = "+deleteId;

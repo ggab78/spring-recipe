@@ -9,8 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -32,13 +31,13 @@ public class ImageServiceImplTest {
     public void saveImageFile() throws Exception{
 
         //given
-        Long id=1L;
+        String id="1";
         MockMultipartFile multipartFile =
                 new MockMultipartFile("imagefile", "testing.txt", "text/plain",
                         "Spring Framework".getBytes());
         Recipe recipe = new Recipe();
         recipe.setId(id);
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
+        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
         ArgumentCaptor<Recipe> captor = ArgumentCaptor.forClass(Recipe.class);
 
         //when
@@ -46,7 +45,7 @@ public class ImageServiceImplTest {
 
 
         //then
-        verify(recipeService, times(1)).getRecipeById(anyLong());
+        verify(recipeService, times(1)).getRecipeById(anyString());
         verify(recipeService, times(1)).saveRecipe(captor.capture());
 
         Recipe capturedRecipe = captor.getValue();

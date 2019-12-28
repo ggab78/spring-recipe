@@ -12,7 +12,7 @@ public class UnitOfMeasureToUnitOfMeasureCommandTest {
     UnitOfMeasureToUnitOfMeasureCommand converter;
 
     public static final String DESCRIPTION = "description";
-    public static final Long ID = 1L;
+    public static final String ID = "1";
 
     @Before
     public void setUp() throws Exception {

@@ -20,10 +20,10 @@ import static org.mockito.Mockito.*;
 public class IngredientToIngredientCommandTest {
 
 
-    public static final Long ID =1L;
+    public static final String ID ="1";
     public static final String DESCRIPTION = "description";
     public static final BigDecimal AMOUNT = new BigDecimal(2.0);
-    public static final Long UOM_ID = 1L;
+    public static final String UOM_ID = "1";
     public static final String UOM_DESCRIPTION = "uom_description";
 
     IngredientToIngredientCommand ingredientToIngredientCommand;

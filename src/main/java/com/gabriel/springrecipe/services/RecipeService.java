@@ -10,13 +10,13 @@ public interface RecipeService {
 
     Set<Recipe> getRecipes();
 
-    Recipe getRecipeById(Long id);
+    Recipe getRecipeById(String id);
 
     RecipeCommand saveRecipeCommand(RecipeCommand command);
 
     Recipe saveRecipe(Recipe recipe);
 
-    RecipeCommand getRecipeCommandById(Long id);
+    RecipeCommand getRecipeCommandById(String id);
 
-    boolean deleteById(Long id) throws Exception;
+    boolean deleteById(String id) throws Exception;
 }

@@ -25,21 +25,24 @@ public class IngredientServiceImpl implements IngredientService {
     private final UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure;
 
     @Override
-    public Ingredient findIngredientByRecipeIdAndId(Long recipeId, Long ingId) {
+    public Ingredient findIngredientByRecipeIdAndId(String recipeId, String ingId) {
+
         Recipe recipe = recipeService.getRecipeById(recipeId);
         if(recipe.getIngredients().size() == 0){
             throw new RuntimeException("Recipe doesn't contain ingredients");
         }
-        Optional<Ingredient> ingredientOptional = ingredientRepository.findByRecipeAndId(recipe, ingId);
-        if(!ingredientOptional.isPresent()){
-            throw new RuntimeException("Ingredient with id = " + ingId +" doesn't exist");
+
+        for(Ingredient ingredient:recipe.getIngredients()){
+            if(ingredient.getId().equals(ingId)){
+                return ingredient;
+            }
         }
-        return ingredientOptional.get();
+        throw new RuntimeException("Ingredient Id not found");
     }
 
     @Override
     @Transactional
-    public IngredientCommand findIngredientCommandByRecipeIdAndId(Long recipeId, Long ingId) {
+    public IngredientCommand findIngredientCommandByRecipeIdAndId(String recipeId, String ingId) {
         return ingredientToIngredientCommand.convert(findIngredientByRecipeIdAndId(recipeId, ingId));
     }
 
@@ -72,14 +75,14 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientToIngredientCommand.convert(saveIngredient);
     }
     @Override
-    public void deleteIngredientByRecipeIdAndId(Long recipeId, Long ingId) throws Exception{
+    public void deleteIngredientByRecipeIdAndId(String recipeId, String ingId) throws Exception{
 
         Recipe recipe = recipeService.getRecipeById(recipeId);
         if(recipe !=null){
             if(recipe.getIngredients().size()>0){
                 recipe.getIngredients().forEach(ingredient -> {
                     if(ingredient.getId().equals(ingId)){
-                        ingredient.setRecipe(null);
+//                        ingredient.setRecipe(null);
                         ingredientRepository.delete(ingredient);
                         recipeService.saveRecipe(recipe);
                     }
