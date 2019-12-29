@@ -5,7 +5,11 @@ import com.gabriel.springrecipe.domain.*;
 import com.gabriel.springrecipe.repositories.CategoryRepository;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
 import com.gabriel.springrecipe.repositories.UnitOfMeasureRepository;
+import com.gabriel.springrecipe.repositories.reactive.CategoryReactiveRepository;
+import com.gabriel.springrecipe.repositories.reactive.RecipeReactiveRepository;
+import com.gabriel.springrecipe.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -17,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by jt on 6/13/17.
- */
+
 @Slf4j
 @Component
 @Profile("default")
@@ -54,6 +56,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         recipeRepository.deleteAll();
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading Bootstrap Data");
+
     }
 
     private void loadCategories(){
@@ -153,7 +156,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         //get optionals
         UnitOfMeasure eachUom = eachUomOptional.get();
         UnitOfMeasure tableSpoonUom = tableSpoonUomOptional.get();
-        UnitOfMeasure teapoonUom = tableSpoonUomOptional.get();
+        UnitOfMeasure teaSpoonUom = tableSpoonUomOptional.get();
         UnitOfMeasure dashUom = dashUomOptional.get();
         UnitOfMeasure pintUom = dashUomOptional.get();
         UnitOfMeasure cupsUom = cupsUomOptional.get();
@@ -206,7 +209,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
         //very redundent - could add helper method, and make this simpler
         guacRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(".5"), teapoonUom));
+        guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(".5"), teaSpoonUom));
         guacRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
         guacRecipe.addIngredient(new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), tableSpoonUom));
         guacRecipe.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom));
@@ -257,10 +260,10 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         tacosRecipe.setNotes(tacoNotes);
 
         tacosRecipe.addIngredient(new Ingredient("Ancho Chili Powder", new BigDecimal(2), tableSpoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Oregano", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Dried Cumin", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Sugar", new BigDecimal(1), teapoonUom));
-        tacosRecipe.addIngredient(new Ingredient("Salt", new BigDecimal(".5"), teapoonUom));
+        tacosRecipe.addIngredient(new Ingredient("Dried Oregano", new BigDecimal(1), teaSpoonUom));
+        tacosRecipe.addIngredient(new Ingredient("Dried Cumin", new BigDecimal(1), teaSpoonUom));
+        tacosRecipe.addIngredient(new Ingredient("Sugar", new BigDecimal(1), teaSpoonUom));
+        tacosRecipe.addIngredient(new Ingredient("Salt", new BigDecimal(".5"), teaSpoonUom));
         tacosRecipe.addIngredient(new Ingredient("Clove of Garlic, Choppedr", new BigDecimal(1), eachUom));
         tacosRecipe.addIngredient(new Ingredient("finely grated orange zestr", new BigDecimal(1), tableSpoonUom));
         tacosRecipe.addIngredient(new Ingredient("fresh-squeezed orange juice", new BigDecimal(3), tableSpoonUom));
