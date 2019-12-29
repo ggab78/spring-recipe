@@ -125,7 +125,7 @@ public class RecipeServiceImplTest {
 
         //then
         RecipeCommand command = recipeService.saveRecipeCommand(recipeCommand);
-        assertEquals(((Long)69L), command.getId());
+        assertEquals("69", command.getId());
         verify(recipeCommandToRecipe, times(1)).convert(any());
         verify(recipeRepository, times(1)).save(any());
         verify(recipeToRecipeCommand, times(1)).convert(any());

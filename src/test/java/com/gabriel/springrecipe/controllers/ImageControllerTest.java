@@ -56,16 +56,6 @@ public class ImageControllerTest {
         verify(recipeService,times(1)).getRecipeCommandById(anyString());
     }
 
-    @Test
-    public void getImageFormNumberFormatException() throws Exception {
-
-        mockMvc.perform(get("/recipe/wrong_number/image"))
-                .andExpect(status().isBadRequest())
-                .andExpect(model().attributeExists("exception"))
-                .andExpect(view().name("400error"));
-
-        verifyZeroInteractions(recipeService);
-    }
 
     @Test
     public void handleImage() throws Exception {

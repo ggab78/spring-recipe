@@ -63,14 +63,13 @@ public class IngredientServiceImplTest {
         Optional<Ingredient> ingredientOptional = Optional.of(ingredient);
 
         when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
-        //when(ingredientRepository.findByRecipeAndId(any(),anyString())).thenReturn(ingredientOptional);
 
         //when
         Ingredient returnedIngredient = ingredientServiceImpl.findIngredientByRecipeIdAndId("1","2");
 
         //then
         assertNotNull(returnedIngredient);
-        assertEquals((Long)2L, returnedIngredient.getId());
+        assertEquals("2", returnedIngredient.getId());
 
         //when
         when(recipeService.getRecipeById(anyString())).thenReturn(new Recipe());
@@ -137,7 +136,7 @@ public class IngredientServiceImplTest {
         assertEquals("command", ingredient.getDescription());
         assertEquals(new BigDecimal(12.0), ingredient.getAmount());
         assertEquals("uom", ingredient.getUom().getDescription());
-        assertEquals((Long)1L, foundIngredientCommand.getId());
+        assertEquals("1", foundIngredientCommand.getId());
         assertEquals("command", foundIngredientCommand.getDescription());
         verify(unitOfMeasureCommandToUnitOfMeasure, times(1)).convert(any());
     }

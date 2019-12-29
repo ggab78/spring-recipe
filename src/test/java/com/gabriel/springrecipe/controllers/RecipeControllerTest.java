@@ -76,15 +76,6 @@ public class RecipeControllerTest {
                 .andExpect(view().name("404error"));
     }
 
-    @Test
-    public void getRecipeByIdNumberFormat() throws Exception {
-
-        mockMvc.perform(get("/recipe/abc/show"))
-                .andExpect(status().isBadRequest())
-                .andExpect(model().attributeExists("exception"))
-                .andExpect(view().name("400error"));
-    }
-
 
 
     @Test
