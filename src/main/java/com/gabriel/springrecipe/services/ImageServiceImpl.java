@@ -18,7 +18,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void saveImageFile(String id, MultipartFile file) {
 
-        Recipe recipe = recipeService.getRecipeById(id);
+        Recipe recipe = recipeService.getRecipeById(id).block();
 
         try{
             Byte[] byteObjects = new Byte[file.getBytes().length];

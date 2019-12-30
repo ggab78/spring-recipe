@@ -41,17 +41,12 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        //categoryRepository.deleteAll();
-        if (categoryRepository.count() == 0L){
-            log.debug("Loading Categories");
-            loadCategories();
-        }
+        categoryRepository.deleteAll();
+        loadCategories();
 
-        //unitOfMeasureRepository.deleteAll();
-        if (unitOfMeasureRepository.count() == 0L){
-            log.debug("Loading UOMs");
-            loadUom();
-        }
+
+        unitOfMeasureRepository.deleteAll();
+        loadUom();
 
         recipeRepository.deleteAll();
         recipeRepository.saveAll(getRecipes());

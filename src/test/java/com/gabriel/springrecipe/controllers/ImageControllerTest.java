@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +47,7 @@ public class ImageControllerTest {
     public void getImageForm() throws Exception {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId("1");
-        when(recipeService.getRecipeCommandById(anyString())).thenReturn(recipeCommand);
+        when(recipeService.getRecipeCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/image"))
                 .andExpect(status().isOk())
@@ -86,7 +87,7 @@ public class ImageControllerTest {
         }
         command.setImage(bytes);
 
-        when(recipeService.getRecipeCommandById(anyString())).thenReturn(command);
+        when(recipeService.getRecipeCommandById(anyString())).thenReturn(Mono.just(command));
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
                 .andExpect(status().isOk())

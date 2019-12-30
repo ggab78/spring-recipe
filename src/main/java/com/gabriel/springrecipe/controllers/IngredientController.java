@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import reactor.core.publisher.Mono;
 
 @Controller
 @Slf4j
@@ -26,7 +27,7 @@ public class IngredientController {
 
     @RequestMapping("/recipe/{id}/ingredients")
     public String listIngredients(Model model, @PathVariable String id) {
-        model.addAttribute("recipe", recipeService.getRecipeCommandById(id));
+        model.addAttribute("recipe", recipeService.getRecipeCommandById(id).block());
         return "recipes/ingredients/list";
     }
 
@@ -34,7 +35,7 @@ public class IngredientController {
     public String showIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingId){
 
         IngredientCommand ingredientCommand
-                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId);
+                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId).block();
         model.addAttribute("ingredient", ingredientCommand);
 
         return "recipes/ingredients/show";
@@ -43,7 +44,7 @@ public class IngredientController {
     @RequestMapping("/recipe/{recipeId}/ingredients/{ingId}/update")
     public String updateIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingId){
         IngredientCommand ingredientCommand
-                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId);
+                = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId).block();
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand().collectList().block());
         return "recipes/ingredients/ingredientform";
@@ -52,7 +53,7 @@ public class IngredientController {
     public String newIngredient(Model model, @PathVariable String recipeId){
 
         //make sure that we have recipe
-        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId);
+        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId).block();
         //todo throw exception if recipeCommand is not found
 
         IngredientCommand ingredientCommand = new IngredientCommand();
@@ -66,7 +67,7 @@ public class IngredientController {
 
     @PostMapping("/recipe/{recipeId}/postingredient")
     public String saveOrUpdate (@ModelAttribute IngredientCommand command){
-        IngredientCommand ingredientCommand = ingredientService.saveIngredientCommand(command);
+        IngredientCommand ingredientCommand = ingredientService.saveIngredientCommand(command).block();
         return "redirect:/recipe/"+ingredientCommand.getRecipeId()+"/ingredients/"+ingredientCommand.getId()+"/show";
     }
 

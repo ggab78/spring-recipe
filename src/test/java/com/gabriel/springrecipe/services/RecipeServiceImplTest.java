@@ -6,13 +6,17 @@ import com.gabriel.springrecipe.converters.RecipeToRecipeCommand;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.repositories.RecipeRepository;
+import com.gabriel.springrecipe.repositories.reactive.RecipeReactiveRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +28,7 @@ public class RecipeServiceImplTest {
     RecipeServiceImpl recipeService;
 
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeReactiveRepository;
     @Mock
     RecipeToRecipeCommand recipeToRecipeCommand;
     @Mock
@@ -35,7 +39,7 @@ public class RecipeServiceImplTest {
     public void setUp() throws Exception {
 
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository,recipeToRecipeCommand, recipeCommandToRecipe);
+        recipeService = new RecipeServiceImpl(recipeReactiveRepository,recipeToRecipeCommand, recipeCommandToRecipe);
     }
 
     @Test
@@ -46,17 +50,14 @@ public class RecipeServiceImplTest {
         Recipe recipe2 = new Recipe();
         recipe2.setDescription("better");
 
-        Set<Recipe> recipesData = new HashSet<>();
 
-        recipesData.add(recipe);
-        recipesData.add(recipe2);
 
-        when(recipeRepository.findAll()).thenReturn(recipesData);
+        when(recipeReactiveRepository.findAll()).thenReturn(Flux.just(recipe, recipe2));
 
-        Set<Recipe> recipes = recipeService.getRecipes();
+        List<Recipe> recipes = recipeService.getRecipes().collectList().block();
 
         assertEquals(2,recipes.size());
-        verify(recipeRepository, times(1)).findAll();
+        verify(recipeReactiveRepository, times(1)).findAll();
     }
 
     @Test
@@ -66,23 +67,11 @@ public class RecipeServiceImplTest {
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
 
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
-        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
 
-        assertEquals(recipeId, recipeService.getRecipeById(recipeId).getId());
-        verify(recipeRepository, times(1)).findById(anyString());
-        verify(recipeRepository, never()).findAll();
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void getRecipeByIdNotFound() {
-
-        Optional<Recipe> recipeOptional = Optional.empty();
-
-        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
-
-        recipeService.getRecipeById("1");
-
+        assertEquals(recipeId, recipeService.getRecipeById(recipeId).block().getId());
+        verify(recipeReactiveRepository, times(1)).findById(anyString());
+        verify(recipeReactiveRepository, never()).findAll();
     }
 
 
@@ -96,15 +85,15 @@ public class RecipeServiceImplTest {
 
         Recipe recipe = new Recipe();
         recipe.setId("33");
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
 
         //when
-        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
         //then
-        assertEquals(recipeId, recipeService.getRecipeCommandById(recipeId).getId());
-        verify(recipeRepository, times(1)).findById(anyString());
+        assertEquals(recipeId, recipeService.getRecipeCommandById(recipeId).block().getId());
+        verify(recipeReactiveRepository, times(1)).findById(anyString());
         verify(recipeToRecipeCommand, times(1)).convert(any());
     }
 
@@ -120,14 +109,14 @@ public class RecipeServiceImplTest {
 
         //when
         when(recipeCommandToRecipe.convert(any())).thenReturn(recipe);
-        when(recipeRepository.save(any())).thenReturn(recipe);
+        when(recipeReactiveRepository.save(any())).thenReturn(Mono.just(recipe));
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
         //then
-        RecipeCommand command = recipeService.saveRecipeCommand(recipeCommand);
+        RecipeCommand command = recipeService.saveRecipeCommand(recipeCommand).block();
         assertEquals("69", command.getId());
         verify(recipeCommandToRecipe, times(1)).convert(any());
-        verify(recipeRepository, times(1)).save(any());
+        verify(recipeReactiveRepository, times(1)).save(any());
         verify(recipeToRecipeCommand, times(1)).convert(any());
     }
 
@@ -136,17 +125,17 @@ public class RecipeServiceImplTest {
         String deleteId = "3";
         Recipe recipe = new Recipe();
         recipe.setId(deleteId);
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        when(recipeRepository.findById(deleteId)).thenReturn(recipeOptional);
+
+        when(recipeReactiveRepository.findById(deleteId)).thenReturn(Mono.just(recipe));
         recipeService.deleteById(deleteId);
-        verify(recipeRepository, times(1)).deleteById(deleteId);
+        verify(recipeReactiveRepository, times(1)).deleteById(deleteId);
 
         try{
             deleteId = "4";
             recipeService.deleteById(deleteId);
         }catch (Exception re) {
-            String message = "No recipe with id = "+deleteId;
+            String message = "No recipe with id = "+ deleteId;
             assertEquals(message, re.getMessage());
             throw re;
         }

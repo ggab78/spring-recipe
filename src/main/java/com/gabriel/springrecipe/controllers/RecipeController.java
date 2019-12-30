@@ -24,16 +24,8 @@ public class RecipeController {
     @RequestMapping("/recipe/{id}/show")
     public String getRecipeById(Model model, @PathVariable String id){
 
-//        Long parsedID;
-//        try {
-//            parsedID = Long.parseLong(id);
-//        }catch(NumberFormatException e){
-//            //No need try_catch block since Long.parseLong(String s) throws NumberFormatException
-//            //using this gives opportunity to edit error msg
-//            throw new NumberFormatException("For input string: "+"\""+id+"\"");
-//        }
 
-        model.addAttribute("recipe",recipeService.getRecipeById(id));
+        model.addAttribute("recipe",recipeService.getRecipeById(id).block());
         log.debug("getting recipe/{id}/show page");
         return "recipes/show";
     }
@@ -46,7 +38,7 @@ public class RecipeController {
 
     @RequestMapping("/recipe/{id}/update")
     public String updateRecipe(Model model, @PathVariable String id){
-        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(id));
+        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(id).block());
         log.debug("getting recipe/{id}/update page");
         return "recipes/recipeform";
     }
@@ -61,7 +53,7 @@ public class RecipeController {
             return "recipes/recipeform";
         }
 
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
+        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command).block();
         return "redirect:/recipe/"+ savedCommand.getId() +"/show";
     }
 

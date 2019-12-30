@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import reactor.core.publisher.Mono;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -37,7 +38,7 @@ public class ImageServiceImplTest {
                         "Spring Framework".getBytes());
         Recipe recipe = new Recipe();
         recipe.setId(id);
-        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
+        when(recipeService.getRecipeById(anyString())).thenReturn(Mono.just(recipe));
         ArgumentCaptor<Recipe> captor = ArgumentCaptor.forClass(Recipe.class);
 
         //when

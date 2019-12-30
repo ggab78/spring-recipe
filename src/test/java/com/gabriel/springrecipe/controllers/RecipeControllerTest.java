@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Mono;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -49,7 +50,7 @@ public class RecipeControllerTest {
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
 
-        when(recipeService.getRecipeById(anyString())).thenReturn(recipe);
+        when(recipeService.getRecipeById(anyString())).thenReturn(Mono.just(recipe));
         ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 
         mockMvc.perform(get("/recipe/1/show"))
@@ -98,7 +99,7 @@ public class RecipeControllerTest {
 
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId("2");
-        when(recipeService.getRecipeCommandById(any())).thenReturn(recipeCommand);
+        when(recipeService.getRecipeCommandById(any())).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -120,7 +121,7 @@ public class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2");
 
-        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
         mockMvc.perform(post("/post")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

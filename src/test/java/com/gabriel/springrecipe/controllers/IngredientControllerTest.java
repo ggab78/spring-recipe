@@ -15,9 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import reactor.core.publisher.Flux;
-
-import java.util.HashSet;
-import java.util.Set;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -61,7 +59,7 @@ public class IngredientControllerTest {
         recipeCommand.setId(recipeId);
 
         //when
-        when(recipeService.getRecipeCommandById(anyString())).thenReturn(recipeCommand);
+        when(recipeService.getRecipeCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/ingredients"))
                 .andExpect(status().isOk())
@@ -84,7 +82,7 @@ public class IngredientControllerTest {
         IngredientCommand ingredientCommand = new IngredientCommand();
 
         //when
-        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyString(), anyString())).thenReturn(ingredientCommand);
+        when(ingredientService.findIngredientCommandByRecipeIdAndId(anyString(), anyString())).thenReturn(Mono.just(ingredientCommand));
 
         //then
         mockMvc.perform(get("/recipe/1/ingredients/1/show"))
@@ -98,7 +96,8 @@ public class IngredientControllerTest {
     public void updateIngredient() throws Exception {
 
         when(ingredientService.findIngredientCommandByRecipeIdAndId(anyString(), anyString()))
-                .thenReturn(new IngredientCommand());
+                .thenReturn(Mono.just(new IngredientCommand()));
+        when(unitOfMeasureService.findAllUomCommand()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
         mockMvc.perform(get("/recipe/1/ingredients/1/update"))
                 .andExpect(status().isOk())
@@ -121,7 +120,7 @@ public class IngredientControllerTest {
         command.setRecipeId("1");
 
         //when
-        when(ingredientService.saveIngredientCommand(any())).thenReturn(command);
+        when(ingredientService.saveIngredientCommand(any())).thenReturn(Mono.just(command));
 
         //then
         mockMvc.perform(post("/recipe/1/postingredient")
@@ -141,6 +140,7 @@ public class IngredientControllerTest {
         UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
         unitOfMeasureCommand.setDescription("uom");
 
+        when(recipeService.getRecipeCommandById(anyString())).thenReturn(Mono.just(new RecipeCommand()));
         when(unitOfMeasureService.findAllUomCommand()).thenReturn(Flux.just(unitOfMeasureCommand));
 
         mockMvc.perform(get("/recipe/1/ingredients/new"))
