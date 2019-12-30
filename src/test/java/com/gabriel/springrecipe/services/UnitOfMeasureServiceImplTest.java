@@ -4,14 +4,17 @@ import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.gabriel.springrecipe.domain.UnitOfMeasure;
 import com.gabriel.springrecipe.repositories.UnitOfMeasureRepository;
+import com.gabriel.springrecipe.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,37 +29,39 @@ public class UnitOfMeasureServiceImplTest {
     UnitOfMeasureServiceImpl unitOfMeasureService;
 
     @Mock
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     @Mock
     UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
 
     MockMvc mockMvc;
+    Flux<UnitOfMeasure> uoms;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        unitOfMeasureService = new UnitOfMeasureServiceImpl(unitOfMeasureRepository, unitOfMeasureToUnitOfMeasureCommand);
+        unitOfMeasureService = new UnitOfMeasureServiceImpl(unitOfMeasureReactiveRepository, unitOfMeasureToUnitOfMeasureCommand);
         mockMvc = MockMvcBuilders.standaloneSetup(unitOfMeasureService).build();
+
+        UnitOfMeasure unitOne = new UnitOfMeasure();
+        unitOne.setId("1");
+
+        UnitOfMeasure unitTwo = new UnitOfMeasure();
+        unitTwo.setId("2");
+
+        uoms = Flux.just(unitOne, unitTwo);
+
     }
 
     @Test
     public void findAllUom() {
-        //given
-        Set<UnitOfMeasure> unitOfMeasureSet = new HashSet<>();
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId("1");
-        unitOfMeasureSet.add(unitOfMeasure);
-        unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId("2");
-        unitOfMeasureSet.add(unitOfMeasure);
-        Iterable<UnitOfMeasure> unitOfMeasureIterable = unitOfMeasureSet.stream().collect(Collectors.toSet());
 
         //when
-        when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasureIterable);
+        when(unitOfMeasureReactiveRepository.findAll()).thenReturn(uoms);
 
         //then
-        assertEquals(2, unitOfMeasureService.findAllUom().size());
+        assertEquals((Long)2L, unitOfMeasureService.findAllUom().count().block());
+        assertEquals("1", unitOfMeasureService.findAllUom().collectList().block().get(0).getId());
 
     }
 
@@ -64,24 +69,16 @@ public class UnitOfMeasureServiceImplTest {
     public void findAllUomCommand() {
         //given
         UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
-        Set<UnitOfMeasure> unitOfMeasureSet = new HashSet<>();
-        UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId("1");
-        unitOfMeasureSet.add(unitOfMeasure);
-        unitOfMeasure = new UnitOfMeasure();
-        unitOfMeasure.setId("2");
-        unitOfMeasureSet.add(unitOfMeasure);
-        Iterable<UnitOfMeasure> unitOfMeasureIterable = unitOfMeasureSet.stream().collect(Collectors.toSet());
 
         //when
-        when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasureIterable);
+        when(unitOfMeasureReactiveRepository.findAll()).thenReturn(uoms);
         when(unitOfMeasureToUnitOfMeasureCommand.convert(any())).thenReturn(unitOfMeasureCommand);
 
         //then
-        assertEquals(2,unitOfMeasureService.findAllUom().size());
+        assertEquals((Long)2L,unitOfMeasureService.findAllUom().count().block());
 
         //unitofMeasureCommand is the same that is why only one is added and invoked twice
-        assertEquals(1, unitOfMeasureService.findAllUomCommand().size());
+        assertEquals((Long)2L, unitOfMeasureService.findAllUomCommand().count().block());
         verify(unitOfMeasureToUnitOfMeasureCommand, times(2)).convert(any());
     }
 }

@@ -2,13 +2,9 @@ package com.gabriel.springrecipe.services;
 
 import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.domain.UnitOfMeasure;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
 
 public interface UnitOfMeasureService {
-
-    Set<UnitOfMeasure> findAllUom();
-
-    Set<UnitOfMeasureCommand> findAllUomCommand();
-
+    Flux<UnitOfMeasure> findAllUom();
+    Flux<UnitOfMeasureCommand> findAllUomCommand();
 }

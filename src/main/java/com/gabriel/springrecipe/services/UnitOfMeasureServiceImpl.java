@@ -4,8 +4,10 @@ import com.gabriel.springrecipe.commands.UnitOfMeasureCommand;
 import com.gabriel.springrecipe.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.gabriel.springrecipe.domain.UnitOfMeasure;
 import com.gabriel.springrecipe.repositories.UnitOfMeasureRepository;
+import com.gabriel.springrecipe.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,25 +16,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
     UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
 
 
     @Override
-    public Set<UnitOfMeasure> findAllUom() {
-        Set<UnitOfMeasure> unitOfMeasureSet = new HashSet<>();
-        unitOfMeasureRepository.findAll().forEach(unitOfMeasure -> {
-            unitOfMeasureSet.add(unitOfMeasure);
-        });
-        return unitOfMeasureSet;
+    public Flux<UnitOfMeasure> findAllUom() {
+      return unitOfMeasureReactiveRepository.findAll();
     }
 
     @Override
-    public Set<UnitOfMeasureCommand> findAllUomCommand() {
-        Set<UnitOfMeasureCommand> unitOfMeasureCommandSet = new HashSet<>();
-        findAllUom().forEach(unitOfMeasure -> {
-            unitOfMeasureCommandSet.add(unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasure));
-        });
-        return unitOfMeasureCommandSet;
+    public Flux<UnitOfMeasureCommand> findAllUomCommand() {
+        return findAllUom().map(unitOfMeasureToUnitOfMeasureCommand::convert);
     }
 }

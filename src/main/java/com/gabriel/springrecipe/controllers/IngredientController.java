@@ -45,7 +45,7 @@ public class IngredientController {
         IngredientCommand ingredientCommand
                 = ingredientService.findIngredientCommandByRecipeIdAndId(recipeId,ingId);
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand());
+        model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand().collectList().block());
         return "recipes/ingredients/ingredientform";
     }
     @RequestMapping("/recipe/{recipeId}/ingredients/new")
@@ -60,7 +60,7 @@ public class IngredientController {
         ingredientCommand.setUom(new UnitOfMeasureCommand());
 
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand());
+        model.addAttribute("uomList", unitOfMeasureService.findAllUomCommand().collectList().block());
         return "recipes/ingredients/ingredientform";
     }
 
