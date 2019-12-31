@@ -1,16 +1,14 @@
 package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.RecipeCommand;
-import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import javax.validation.Valid;
 

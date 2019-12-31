@@ -1,14 +1,14 @@
 package com.gabriel.springrecipe.domain;
 
 import lombok.*;
-
-import java.util.UUID;
+import org.springframework.data.annotation.Id;
 
 
 @Data
 public class Notes {
 
-    private String id= UUID.randomUUID().toString();
+    @Id
+    private String id;
     private String recipeNotes;
 
 }

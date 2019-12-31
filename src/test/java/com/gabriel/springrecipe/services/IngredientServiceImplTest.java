@@ -197,7 +197,7 @@ public class IngredientServiceImplTest {
 
 
         //when
-        when(recipeService.getRecipeById(anyString())).thenReturn(null);
+        when(recipeService.getRecipeById(anyString())).thenReturn(Mono.empty());
         //then
         try{
             ingredientServiceImpl.deleteIngredientByRecipeIdAndId("1", "1");
