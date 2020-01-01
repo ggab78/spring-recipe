@@ -21,13 +21,14 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         if(source == null){
             return null;
         }
-
         Recipe recipe = new Recipe();
+        if(!source.getId().isEmpty()){
+            recipe.setId(source.getId());
+        }
         recipe.setSource(source.getSource());
         recipe.setServings(source.getServings());
         recipe.setUrl(source.getUrl());
         recipe.setDirections(source.getDirections());
-        recipe.setId(source.getId());
         recipe.setDescription(source.getDescription());
         recipe.setDifficulty(source.getDifficulty());
         recipe.setPrepTime(source.getPrepTime());

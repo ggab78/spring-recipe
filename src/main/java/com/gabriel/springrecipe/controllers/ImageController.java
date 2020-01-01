@@ -29,14 +29,14 @@ public class ImageController {
 
     @RequestMapping("/recipe/{recipeId}/image")
     public String getImageForm(@PathVariable String recipeId, Model model) {
-        model.addAttribute("recipe", recipeService.getRecipeCommandById(recipeId));
+        model.addAttribute("recipe", recipeService.getRecipeCommandById(recipeId).block());
         return "recipes/imageuploadform";
     }
 
     @PostMapping("/recipe/{recipeId}/image")
     public String handleImage(@PathVariable String recipeId, @RequestParam("imagefile")MultipartFile file){
 
-        imageService.saveImageFile(recipeId, file);
+        imageService.saveImageFile(recipeId, file).block();
         return "redirect:/recipe/"+recipeId+"/show";
     }
 

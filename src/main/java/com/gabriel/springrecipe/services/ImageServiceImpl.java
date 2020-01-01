@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -16,26 +17,28 @@ public class ImageServiceImpl implements ImageService {
     RecipeService recipeService;
 
     @Override
-    public void saveImageFile(String id, MultipartFile file) {
+    public Mono<Void> saveImageFile(String id, MultipartFile file) {
 
-        Recipe recipe = recipeService.getRecipeById(id).block();
+         Mono<Recipe> recipeMono = recipeService.getRecipeById(id)
+                .map(recipe -> {
+                    try{
+                        Byte[] byteObjects = new Byte[file.getBytes().length];
 
-        try{
-            Byte[] byteObjects = new Byte[file.getBytes().length];
+                        int i = 0;
+                        for(byte b: file.getBytes()){
+                            byteObjects[i++]=b;
+                        }
+                        recipe.setImage(byteObjects);
 
-            int i = 0;
-            for(byte b: file.getBytes()){
-                byteObjects[i++]=b;
-            }
+                    }catch (IOException e){
+                        log.error("error reading image", e);
+                        e.printStackTrace();
+                    }
+                    return recipe;
+                });
 
-            recipe.setImage(byteObjects);
+         recipeService.saveRecipe(recipeMono.block()).block();
 
-            recipeService.saveRecipe(recipe);
-
-        }catch (IOException e){
-            log.error("error reading image", e);
-            e.printStackTrace();
-        }
-
+         return Mono.empty();
     }
 }

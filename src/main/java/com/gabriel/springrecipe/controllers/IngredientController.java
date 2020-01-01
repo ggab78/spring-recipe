@@ -53,7 +53,7 @@ public class IngredientController {
     public String newIngredient(Model model, @PathVariable String recipeId){
 
         //make sure that we have recipe
-        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId).block();
+        //RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId).block();
         //todo throw exception if recipeCommand is not found
 
         IngredientCommand ingredientCommand = new IngredientCommand();

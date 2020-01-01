@@ -38,6 +38,7 @@ public class ImageServiceImplTest {
                         "Spring Framework".getBytes());
         Recipe recipe = new Recipe();
         recipe.setId(id);
+        when(recipeService.saveRecipe(any())).thenReturn(Mono.just(recipe));
         when(recipeService.getRecipeById(anyString())).thenReturn(Mono.just(recipe));
         ArgumentCaptor<Recipe> captor = ArgumentCaptor.forClass(Recipe.class);
 
@@ -51,7 +52,5 @@ public class ImageServiceImplTest {
 
         Recipe capturedRecipe = captor.getValue();
         assertEquals(multipartFile.getBytes().length, capturedRecipe.getImage().length);
-
-
     }
 }

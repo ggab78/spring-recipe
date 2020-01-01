@@ -2,7 +2,6 @@ package com.gabriel.springrecipe.bootstrap;
 
 import com.gabriel.springrecipe.domain.*;
 
-
 import com.gabriel.springrecipe.repositories.reactive.CategoryReactiveRepository;
 import com.gabriel.springrecipe.repositories.reactive.RecipeReactiveRepository;
 import com.gabriel.springrecipe.repositories.reactive.UnitOfMeasureReactiveRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Slf4j
 @Component
@@ -41,6 +39,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
         recipeRepository.deleteAll().block();
         recipeRepository.saveAll(getRecipes()).collectList().block();
+
+        Recipe recipe = getRecipe();
+        recipeRepository.save(recipe).block();
     }
 
     private void loadCategories(){
@@ -94,6 +95,36 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         uom8.setDescription("Dash");
         unitOfMeasureRepository.save(uom8).block();
     }
+
+    private Recipe getRecipe() {
+
+        UnitOfMeasure cupsUom = unitOfMeasureRepository.findByDescription("Cup").block();
+        Category mexicanCategory = categoryRepository.findByDescription("Mexican").block();
+
+
+        Recipe guacRecipe = new Recipe();
+
+        guacRecipe.setDescription("test recipe");
+        guacRecipe.setPrepTime(10);
+        guacRecipe.setCookTime(20);
+        guacRecipe.setDifficulty(Difficulty.EASY);
+        guacRecipe.setDirections("xyz");
+
+        Notes guacNotes = new Notes();
+        guacNotes.setRecipeNotes("ccc");
+        guacRecipe.setNotes(guacNotes);
+
+
+        guacRecipe.addIngredient(new Ingredient("some test ingredient", new BigDecimal(2), cupsUom));
+        guacRecipe.getCategories().add(mexicanCategory);
+
+        guacRecipe.setUrl("http://www.simplyrecipes.com/recipes/perfect_guacamole/");
+        guacRecipe.setServings(4);
+        guacRecipe.setSource("bla bla");
+
+        return guacRecipe;
+    }
+
 
     private List<Recipe> getRecipes() {
 
