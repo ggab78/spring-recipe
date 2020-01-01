@@ -6,6 +6,7 @@ import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.exceptions.NotFoundException;
 import com.gabriel.springrecipe.services.RecipeService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Ignore
 public class RecipeControllerTest {
 
     RecipeController recipeController;

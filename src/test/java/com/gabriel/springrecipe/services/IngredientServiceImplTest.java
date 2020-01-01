@@ -37,14 +37,14 @@ public class IngredientServiceImplTest {
     @Mock
     UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
-    MockMvc mockMvc;
+    //MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ingredientServiceImpl = new IngredientServiceImpl(recipeService,
                 ingredientToIngredientCommand, ingredientCommandToIngredient, unitOfMeasureReactiveRepository);
-        mockMvc = MockMvcBuilders.standaloneSetup(ingredientServiceImpl).build();
+       // mockMvc = MockMvcBuilders.standaloneSetup(ingredientServiceImpl).build();
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.gabriel.springrecipe.controllers;
 import com.gabriel.springrecipe.domain.Recipe;
 import com.gabriel.springrecipe.services.RecipeService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Ignore
 public class IndexControllerTest {
 
     IndexController indexController;

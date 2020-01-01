@@ -9,6 +9,7 @@ import com.gabriel.springrecipe.domain.Difficulty;
 import com.gabriel.springrecipe.domain.Notes;
 import com.gabriel.springrecipe.domain.Recipe;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -68,6 +69,7 @@ public class RecipeCommandToRecipeTest {
     }
 
     @Test
+    @Ignore
     public void testEmpty() throws Exception{
         Notes notes = new Notes();
         when(notesCommandToNotes.convert(any())).thenReturn(notes);

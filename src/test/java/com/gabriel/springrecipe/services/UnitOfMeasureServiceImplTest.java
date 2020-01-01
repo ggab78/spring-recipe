@@ -34,14 +34,14 @@ public class UnitOfMeasureServiceImplTest {
     @Mock
     UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
 
-    MockMvc mockMvc;
+   // MockMvc mockMvc;
     Flux<UnitOfMeasure> uoms;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         unitOfMeasureService = new UnitOfMeasureServiceImpl(unitOfMeasureReactiveRepository, unitOfMeasureToUnitOfMeasureCommand);
-        mockMvc = MockMvcBuilders.standaloneSetup(unitOfMeasureService).build();
+       // mockMvc = MockMvcBuilders.standaloneSetup(unitOfMeasureService).build();
 
         UnitOfMeasure unitOne = new UnitOfMeasure();
         unitOne.setId("1");
