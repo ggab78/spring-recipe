@@ -2,47 +2,65 @@ package com.gabriel.springrecipe.controllers;
 
 import com.gabriel.springrecipe.commands.RecipeCommand;
 import com.gabriel.springrecipe.services.RecipeService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
+import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
+import reactor.core.publisher.Mono;
 
-
-import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@AllArgsConstructor
+
 public class RecipeController {
 
     private RecipeService recipeService;
 
+    public RecipeController(RecipeService recipeService){
+        this.recipeService=recipeService;
+    }
+
+    private WebDataBinder webDataBinder;
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder){
+        this.webDataBinder=webDataBinder;
+    }
+
+
+
     @RequestMapping("/recipe/{id}/show")
     public String getRecipeById(Model model, @PathVariable String id){
-
 
         model.addAttribute("recipe",recipeService.getRecipeById(id));
         log.debug("getting recipe/{id}/show page");
         return "recipes/show";
     }
 
-    @RequestMapping("/recipe/new")
+    @GetMapping("/recipe/new")
     public String saveRecipe(Model model){
-        model.addAttribute("newrecipe", new RecipeCommand());
+        model.addAttribute("recipe", new RecipeCommand());
         return "recipes/recipeform";
     }
 
-    @RequestMapping("/recipe/{id}/update")
+    @GetMapping("/recipe/{id}/update")
     public String updateRecipe(Model model, @PathVariable String id){
-        model.addAttribute("newrecipe", recipeService.getRecipeCommandById(id));
+
+        Mono<RecipeCommand> recipeCommandMono = recipeService.getRecipeCommandById(id);
+
+        model.addAttribute("recipe", recipeCommandMono);
         log.debug("getting recipe/{id}/update page");
         return "recipes/recipeform";
     }
 
     @PostMapping("/post")
-    public String saveOrUpdate(@Valid @ModelAttribute("newrecipe") RecipeCommand command, BindingResult bindingResult){
+    public String saveOrUpdate(@ModelAttribute("recipe") RecipeCommand command){
+
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
 
         if(bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> {
@@ -51,8 +69,10 @@ public class RecipeController {
             return "recipes/recipeform";
         }
 
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command).block();
-        return "redirect:/recipe/"+ savedCommand.getId() +"/show";
+
+
+        RecipeCommand recipeCommand = recipeService.saveRecipeCommand(command).block();
+        return "redirect:/recipe/"+ recipeCommand.getId() +"/show";
     }
 
     @RequestMapping("/recipe/{id}/delete")
@@ -60,5 +80,4 @@ public class RecipeController {
         recipeService.deleteById(id);
         return "redirect:/";
     }
-
 }
