@@ -15,14 +15,13 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class WebConfig {
 
     @Bean
-    RouterFunction<?> route(RecipeService recipeService) {
+    public RouterFunction<?> route(RecipeService recipeService) {
 
         return RouterFunctions.route(GET("/api/recipes"),
         serverRequest -> ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(recipeService.getRecipes(), Recipe.class));
-
     }
 
 }
