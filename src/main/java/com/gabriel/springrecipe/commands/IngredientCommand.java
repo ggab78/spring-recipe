@@ -20,11 +20,11 @@ public class IngredientCommand {
     private String id;
     private String recipeId;
 
-    @NotNull
+    //@NotNull
     private UnitOfMeasureCommand uom;
 
-    @NotNull
-    @Min(1)
+    //@NotNull
+    //@Min(1)
     private BigDecimal amount;
 
 }

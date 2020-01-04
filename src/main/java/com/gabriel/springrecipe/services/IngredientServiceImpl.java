@@ -3,6 +3,7 @@ package com.gabriel.springrecipe.services;
 import com.gabriel.springrecipe.commands.IngredientCommand;
 import com.gabriel.springrecipe.converters.IngredientCommandToIngredient;
 import com.gabriel.springrecipe.converters.IngredientToIngredientCommand;
+import com.gabriel.springrecipe.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import com.gabriel.springrecipe.domain.Ingredient;
 
 import com.gabriel.springrecipe.domain.Recipe;
@@ -24,6 +25,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
     private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+    private final UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure;
 
     @Override
     public Mono<Ingredient> findIngredientByRecipeIdAndId(String recipeId, String ingId) {
@@ -52,24 +54,23 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
 
-//       return recipeReactiveRepository
-//                .findById(command.getRecipeId())
-//                .flatMapIterable(Recipe::getIngredients)
-//                .filter(ingredient -> ingredient.getId().equals(command.getId()))
-//                .singleOrEmpty()
-//                .map(ingredient -> {
-//                    ingredient.setDescription(command.getDescription());
-//                    ingredient.setAmount(command.getAmount());
-//                    ingredient.setUom(unitOfMeasureCommandToUnitOfMeasure.convert(command.getUom()));
-//                    ingredientReactiveRepository.save(ingredient);
-//                    IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
-//                    ingredientCommand.setRecipeId(command.getRecipeId());
-//                    return ingredientCommand;
-//                });
 
-            Recipe recipe = recipeService.getRecipeById(command.getRecipeId()).block();
+//            return recipeService.getRecipeById(command.getRecipeId())
+//                    .flatMapIterable(Recipe::getIngredients)
+//                    .filter(ingredient -> ingredient.getId().equals(command.getId()))
+//                    .singleOrEmpty()
+//                    .map(ingredient -> {
+//                        ingredient.setDescription(command.getDescription());
+//                        ingredient.setAmount(command.getAmount());
+////                      ingredient.setUom(unitOfMeasureReactiveRepository.findById(command.getId()).block());
+//                        ingredient.setUom(unitOfMeasureCommandToUnitOfMeasure.convert(command.getUom()));
+//                        IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
+//                        ingredientCommand.setRecipeId(command.getRecipeId());
+//                        return ingredientCommand;
+//                    });
 
 
+         Recipe recipe = recipeService.getRecipeById(command.getRecipeId()).block();
 
         if (recipe == null) {
 
